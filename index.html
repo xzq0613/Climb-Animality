@@ -2,491 +2,132 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>测试你的攀岩人格｜你是岩馆里的哪种动物？</title>
-  <meta name="description" content="一个更专业的攀岩风格原型测试：用动物原型呈现你的攀爬风格。" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>探索你的攀岩灵魂｜你是岩馆里的哪种动物</title>
+  <meta name="description" content="20题攀岩动物原型测试，基于动作偏好与行为取向，输出你的主倾向与负倾向。" />
   <style>
     :root {
-      --bg1: #f7eddc;
-      --bg2: #dceee6;
-      --bg3: #f8dfd7;
-      --ink: #22222a;
-      --sub: #6d6a73;
-      --orange: #ea7b26;
-      --orange-dark: #d26715;
-      --cream: #fffdf9;
-      --line: rgba(34,34,42,.08);
-      --shadow: 0 14px 30px rgba(87, 70, 40, .12);
-      --r-xl: 28px;
-      --r-lg: 22px;
-      --r-md: 16px;
-      --r-pill: 999px;
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --line: #ece7df;
+      --line-strong: #ded5c7;
+      --text: #1f1a17;
+      --muted: #76695e;
+      --accent: #c95a1d;
+      --accent-soft: #f6a259;
+      --shadow: 0 10px 30px rgba(80, 52, 22, 0.06);
+      --radius: 24px;
     }
-
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
-    body {
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
-      color: var(--ink);
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 14% 18%, rgba(255, 217, 153, .34) 0 4%, transparent 4.5%),
-        radial-gradient(circle at 80% 14%, rgba(177, 227, 196, .38) 0 4.6%, transparent 5%),
-        radial-gradient(circle at 18% 72%, rgba(255, 176, 176, .24) 0 5%, transparent 5.5%),
-        radial-gradient(circle at 66% 42%, rgba(196, 217, 255, .30) 0 4%, transparent 4.5%),
-        radial-gradient(circle at 90% 70%, rgba(255, 214, 145, .25) 0 4.2%, transparent 4.6%),
-        linear-gradient(135deg, var(--bg1) 0%, var(--bg3) 46%, var(--bg2) 100%);
-      background-attachment: fixed;
-    }
-
-    .page {
-      min-height: 100vh;
-      padding: 18px 14px 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .phone {
-      width: 100%;
-      max-width: 430px;
-      min-height: calc(100vh - 36px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .view { display: none; }
-    .view.active { display: block; animation: fadeIn .35s ease; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero {
-      text-align: center;
-      padding: 12px 8px 8px;
-    }
-
-    .emoji-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      font-size: clamp(28px, 8vw, 42px);
-      margin: 12px 0 20px;
-      flex-wrap: wrap;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,.08));
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(32px, 9vw, 54px);
-      line-height: 1.12;
-      letter-spacing: -.03em;
-      font-weight: 900;
-    }
-
-    .accent { color: var(--orange); }
-
-    .hero .subline {
-      margin: 10px 0 0;
-      font-size: clamp(18px, 4.6vw, 24px);
-      font-weight: 700;
-      color: #5f6875;
-    }
-
-    .hero .subline small {
-      font-size: .85em;
-      opacity: .86;
-    }
-
-    .start-btn, .nav-btn, .outline-btn, .share-btn {
-      border: none;
-      border-radius: var(--r-pill);
-      padding: 16px 24px;
-      font-size: 19px;
-      font-weight: 900;
-      cursor: pointer;
-      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
-    }
-
-    .start-btn, .share-btn {
-      width: 100%;
-      background: linear-gradient(180deg, #f28c2b 0%, var(--orange) 100%);
-      color: #fff;
-      box-shadow: 0 12px 24px rgba(234, 123, 38, .28);
-    }
-
-    .outline-btn, .nav-btn {
-      background: rgba(255,255,255,.72);
-      color: var(--ink);
-      border: 1px solid rgba(34,34,42,.08);
-      box-shadow: var(--shadow);
-    }
-
-    .start-btn:hover, .nav-btn:hover, .outline-btn:hover, .share-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .meta {
-      margin-top: 16px;
-      text-align: center;
-      color: var(--sub);
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .tiny {
-      margin-top: 14px;
-      text-align: center;
-      color: rgba(38, 38, 46, .56);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .card {
-      background: rgba(255,255,255,.76);
-      backdrop-filter: blur(7px);
-      border: 1px solid rgba(255,255,255,.55);
-      border-radius: var(--r-xl);
-      box-shadow: var(--shadow);
-    }
-
-    .quiz-shell {
-      padding: 18px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .counter {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: var(--r-pill);
-      background: rgba(255,255,255,.75);
-      border: 1px solid rgba(34,34,42,.08);
-      color: #5c6170;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .dots {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      max-width: 180px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(34,34,42,.14);
-      transition: all .22s ease;
-    }
-
-    .dot.done { background: var(--orange); transform: scale(1.05); }
-    .dot.current { background: #ffbf83; transform: scale(1.2); }
-
-    .question-card {
-      padding: 22px 18px 18px;
-    }
-
-    .question-title {
-      margin: 0 0 18px;
-      font-size: 28px;
-      line-height: 1.28;
-      font-weight: 900;
-      letter-spacing: -.02em;
-    }
-
-    .helper {
-      margin: -8px 0 18px;
-      color: var(--sub);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .option-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .option {
-      width: 100%;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      border: 1px solid rgba(34,34,42,.08);
-      border-radius: 18px;
-      background: rgba(255,255,255,.92);
-      padding: 15px 16px;
-      cursor: pointer;
-      text-align: left;
-      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease, background .16s ease;
-      box-shadow: 0 6px 16px rgba(82, 70, 43, .05);
-    }
-
-    .option:hover {
-      transform: translateY(-1px);
-      border-color: rgba(234,123,38,.35);
-      box-shadow: 0 10px 22px rgba(234, 123, 38, .12);
-    }
-
-    .option.selected {
-      background: #fff4e9;
-      border-color: rgba(234,123,38,.52);
-    }
-
-    .badge {
-      width: 34px;
-      height: 34px;
-      min-width: 34px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-      color: var(--orange-dark);
-      background: #fff0df;
-      border: 1px solid rgba(234,123,38,.16);
-    }
-
-    .option-text {
-      flex: 1;
-      font-size: 16px;
-      line-height: 1.48;
-      font-weight: 700;
-      color: #2d2f37;
-    }
-
-    .quiz-footer {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
-    .quiz-footer > * { flex: 1; }
-
-    .result-shell {
-      padding: 12px 0 8px;
-    }
-
-    .result-main {
-      padding: 22px 18px 18px;
-      text-align: center;
-    }
-
-    .result-emoji {
-      font-size: 58px;
-      line-height: 1;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 8px 14px rgba(0,0,0,.08));
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: var(--r-pill);
-      background: #fff4e9;
-      color: var(--orange-dark);
-      font-size: 13px;
-      font-weight: 900;
-      border: 1px solid rgba(234,123,38,.16);
-      margin-bottom: 10px;
-    }
-
-    .result-title {
-      margin: 4px 0 6px;
-      font-size: 30px;
-      line-height: 1.2;
-      letter-spacing: -.02em;
-      font-weight: 900;
-    }
-
-    .result-subtitle {
-      color: #5e6370;
-      font-size: 16px;
-      font-weight: 800;
-      margin: 0 0 10px;
-    }
-
-    .result-desc {
-      margin: 0;
-      font-size: 15px;
-      line-height: 1.72;
-      color: #535867;
-      text-align: left;
-    }
-
-    .section-grid {
-      display: grid;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .mini-card {
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(255,255,255,.76);
-      border: 1px solid rgba(34,34,42,.08);
-      box-shadow: var(--shadow);
-    }
-
-    .mini-title {
-      margin: 0 0 8px;
-      font-size: 15px;
-      font-weight: 900;
-    }
-
-    .mini-card ul {
-      margin: 0;
-      padding-left: 18px;
-      display: grid;
-      gap: 8px;
-      color: #555b68;
-      font-size: 14px;
-      line-height: 1.55;
-      font-weight: 600;
-    }
-
-    .score-board {
-      margin-top: 12px;
-      display: grid;
-      gap: 10px;
-      text-align: left;
-    }
-
-    .score-row {
-      padding: 12px 12px 10px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.72);
-      border: 1px solid rgba(34,34,42,.08);
-    }
-
-    .score-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      font-size: 15px;
-      margin-bottom: 10px;
-    }
-
-    .score-top span:last-child {
-      font-size: 14px;
-      color: #6b6f79;
-      font-weight: 800;
-    }
-
-    .track {
-      width: 100%;
-      height: 12px;
-      border-radius: var(--r-pill);
-      background: #eef1f5;
-      overflow: hidden;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,.04);
-    }
-
-    .fill {
-      height: 100%;
-      width: 0;
-      border-radius: inherit;
-      transition: width .4s ease;
-      box-shadow: inset 0 -2px 0 rgba(0,0,0,.08);
-    }
-
-    .cta-stack {
-      display: grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .hide { display: none !important; }
-
-    @media (max-width: 380px) {
-      .question-title { font-size: 25px; }
-      .hero h1 { font-size: 30px; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+    body { font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif; line-height: 1.6; }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 34px 18px 64px; }
+    .hero, .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .hero { text-align: center; padding: 52px 28px 42px; }
+    .hero h1 { margin: 0; font-size: clamp(24px, 4vw, 38px); line-height: 1.2; font-weight: 800; letter-spacing: -0.03em; }
+    .hero .line2 { display: block; margin-top: 8px; background: linear-gradient(90deg, #b84912 0%, #e87d2b 50%, #f6b067 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { max-width: 620px; margin: 18px auto 0; color: var(--muted); font-size: 15px; }
+    .cta { margin-top: 26px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    button { appearance: none; border: none; font: inherit; cursor: pointer; transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease, box-shadow .18s ease; }
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .btn-primary, .btn-secondary { border-radius: 16px; padding: 14px 22px; font-weight: 700; }
+    .btn-primary { background: linear-gradient(90deg, #c95a1d 0%, #ef8f39 100%); color: #fff; box-shadow: 0 10px 24px rgba(201,90,29,.18); }
+    .btn-secondary { background: #fff; color: var(--text); border: 1px solid var(--line-strong); }
+    .panel { margin-top: 18px; padding: 26px 22px; }
+    .hidden { display: none !important; }
+    .progress-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 14px; }
+    .progress-track { margin-top: 12px; height: 8px; background: #f4eee6; border-radius: 999px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, #c95a1d 0%, #ef8f39 100%); transition: width .28s ease; border-radius: inherit; }
+    .question-shell { margin-top: 24px; position: relative; min-height: 356px; }
+    .question-card { border: 1px solid var(--line); border-radius: 22px; padding: 28px 22px 22px; background: #fff; transform: translateX(0); opacity: 1; transition: transform .26s ease, opacity .26s ease; }
+    .question-card.leaving { opacity: 0; transform: translateX(-18px); }
+    .question-card.entering { opacity: 0; transform: translateX(18px); }
+    .question-card.entering.enter-active { opacity: 1; transform: translateX(0); }
+    .question-title { margin: 0 0 18px; font-size: clamp(24px, 3vw, 32px); line-height: 1.3; letter-spacing: -0.02em; font-weight: 800; }
+    .options { display: grid; gap: 12px; }
+    .option { width: 100%; text-align: left; padding: 16px 18px; border-radius: 18px; border: 1px solid var(--line); background: #fff; display: flex; gap: 14px; align-items: flex-start; color: var(--text); }
+    .option:hover { border-color: #e8c7ab; box-shadow: 0 8px 20px rgba(201,90,29,.08); }
+    .option.active { border-color: #e29652; background: #fff8f3; }
+    .option-tag { width: 34px; min-width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #fff7f0; color: var(--accent); border: 1px solid #f2d3bb; font-weight: 800; }
+    .option-text { font-size: 16px; line-height: 1.5; }
+    .nav-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
+    .result-badge { display: inline-flex; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; color: var(--muted); background: #fff; }
+    .result-title { margin: 14px 0 8px; font-size: clamp(30px, 4vw, 42px); line-height: 1.1; letter-spacing: -0.03em; }
+    .result-sub { margin: 0; color: var(--muted); font-size: 15px; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    .card { border: 1px solid var(--line); border-radius: 22px; padding: 22px; background: #fff; }
+    .card h3 { margin: 0 0 10px; font-size: 18px; }
+    .label { display: inline-block; padding: 7px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; background: #fff7f0; color: var(--accent); border: 1px solid #f0d4bc; }
+    .animal-name { margin: 14px 0 8px; font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; }
+    .animal-meta { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+    .animal-desc { color: #483a31; font-size: 15px; margin: 0; }
+    .score-line { margin-top: 16px; font-size: 14px; color: var(--muted); }
+    .result-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+    .footer-note { margin-top: 16px; color: #8c7b6d; font-size: 12px; }
+    @media (max-width: 720px) {
+      .wrap { padding: 22px 14px 42px; }
+      .hero { padding: 42px 20px 34px; }
+      .panel { padding: 20px 16px; }
+      .result-grid { grid-template-columns: 1fr; }
+      .question-card { padding: 22px 16px 18px; }
       .option-text { font-size: 15px; }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <main class="phone">
-      <section id="introView" class="view active hero">
-        <div class="emoji-row">🐵 🐆 🦊 🐐 🐕 🦭</div>
-        <h1>测试你的<br><span class="accent">攀岩人格</span></h1>
-        <p class="subline">你是岩馆里的哪种动物？ <small>🧗</small></p>
+  <div class="wrap">
+    <section class="hero" id="introView">
+      <h1>
+        <span>探索你的攀岩灵魂</span>
+        <span class="line2">你是岩馆里的哪种动物</span>
+      </h1>
+      <p>本测试基于攀岩中的动作偏好与行为取向进行原型归类。它适合做互动风格测试，不等同于严格心理测量。</p>
+      <div class="cta">
+        <button class="btn-primary" id="startBtn">开始测试</button>
+        <button class="btn-secondary" id="viewRuleBtn">查看题型说明</button>
+      </div>
+    </section>
 
-        <div style="height: 18px"></div>
-        <button id="startBtn" class="start-btn">开始测试 →</button>
-        <div class="meta">10道题 · 2分钟 · 超准（大概）</div>
-        <div class="tiny">
-          这是一版更专业的攀岩风格原型测试。<br>
-          外观按视频风格重构，分类逻辑则保留了更稳定的行为维度。
+    <section class="panel hidden" id="quizView">
+      <div class="progress-head">
+        <div id="progressLabel">第 1 / 20 题</div>
+        <div id="progressHint"></div>
+      </div>
+      <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="question-shell" id="questionShell"></div>
+      <div class="nav-row">
+        <button class="btn-secondary" id="prevBtn">上一题</button>
+        <button class="btn-secondary" id="restartBtn">重新开始</button>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="resultView">
+      <div class="result-badge">结果已生成</div>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <p class="result-sub" id="resultSummary"></p>
+      <div class="result-grid">
+        <div class="card">
+          <span class="label">主倾向</span>
+          <div class="animal-name" id="primaryName"></div>
+          <div class="animal-meta" id="primaryMeta"></div>
+          <p class="animal-desc" id="primaryDesc"></p>
+          <div class="score-line" id="primaryScoreLine"></div>
         </div>
-      </section>
-
-      <section id="quizView" class="view">
-        <div class="quiz-shell card">
-          <div class="topbar">
-            <div class="counter" id="counterText">Q1 / 10</div>
-            <div class="dots" id="dotsWrap"></div>
-          </div>
-
-          <div class="question-card">
-            <h2 class="question-title" id="questionTitle"></h2>
-            <div class="helper">选择最像你的那个反应。点击即自动下一题。</div>
-            <div class="option-list" id="optionList"></div>
-            <div class="quiz-footer">
-              <button id="prevBtn" class="outline-btn">上一题</button>
-              <button id="restartBtn" class="nav-btn">重新开始</button>
-            </div>
-          </div>
+        <div class="card">
+          <span class="label">负倾向</span>
+          <div class="animal-name" id="negativeName"></div>
+          <div class="animal-meta" id="negativeMeta"></div>
+          <p class="animal-desc" id="negativeDesc"></p>
+          <div class="score-line" id="negativeScoreLine"></div>
         </div>
-      </section>
-
-      <section id="resultView" class="view result-shell">
-        <div class="card result-main">
-          <div class="result-emoji" id="resultEmoji">🐆</div>
-          <div class="pill" id="resultPill">你的攀岩动物原型</div>
-          <h2 class="result-title" id="resultTitle"></h2>
-          <div class="result-subtitle" id="resultSubtitle"></div>
-          <p class="result-desc" id="resultDesc"></p>
-
-          <div class="score-board" id="scoreBoard"></div>
-
-          <div class="cta-stack">
-            <button id="shareBtn" class="share-btn">复制结果摘要</button>
-            <button id="retestBtn" class="outline-btn">再测一次</button>
-          </div>
-        </div>
-
-        <div class="section-grid">
-          <div class="mini-card">
-            <h3 class="mini-title">你的优势场景</h3>
-            <ul id="strengthList"></ul>
-          </div>
-          <div class="mini-card">
-            <h3 class="mini-title">更像样的提升方向</h3>
-            <ul id="adviceList"></ul>
-          </div>
-        </div>
-
-        <div class="tiny">说明：本测试是攀岩风格原型，不是心理诊断工具。</div>
-      </section>
-    </main>
+      </div>
+      <div class="result-actions">
+        <button class="btn-primary" id="copyBtn">复制结果摘要</button>
+        <button class="btn-secondary" id="retestBtn">再测一次</button>
+      </div>
+      <div class="footer-note">说明：若最高分并列且给定决胜规则仍无法区分，页面会如实显示“介于两类之间”。</div>
+    </section>
   </div>
 
   <script>
@@ -496,368 +137,318 @@
       visitCooldownHours: 12
     };
 
+    const ANIMALS = {
+      '长臂猿': { key: '长臂猿', subtitle: '静态 / 长臂展 / 站高够点', desc: '你更倾向于用站高、够距与动作经济性解决问题。你不急着飞，而是先把身体摆进最省力的位置。' },
+      '雪豹': { key: '雪豹', subtitle: '动态 / 爆发 / 敢飞', desc: '你更相信爆发、节奏与果断执行。只要判断值得冲，你会直接把时机做出来。' },
+      '高山灵猫': { key: '高山灵猫', subtitle: '柔韧 / 体位 / 转髋开髋', desc: '你擅长通过体位调整、转髋开髋与身体延展获得更顺的解法，而不是硬碰硬。' },
+      '灰熊': { key: '灰熊', subtitle: '力量 / 锁定 / 硬拉硬控', desc: '你更依赖上肢硬实力、锁定能力与直接控制。面对卡点时，你往往先把点抓牢再处理后续。' },
+      '岩羊': { key: '岩羊', subtitle: '平衡 / 小脚点 / 重心控制', desc: '你对小脚点、平衡感与重心调度更敏感。别人犹豫的地方，你往往能稳稳站住。' },
+      '高山土拨鼠': { key: '高山土拨鼠', subtitle: '社交 / 氛围 / 团爬驱动', desc: '你在团爬环境中的驱动力更强。你不仅在爬，也在带动氛围、吸收外界反馈并与人一起解题。' }
+    };
+
     const QUESTIONS = [
-      {
-        title: "岩馆刚开出一条新线，你最可能：",
-        options: [
-          { key: "A", text: "第一个冲上去试试，先做再说。", scores: { execution: 2, power: 1, expressive: 1 } },
-          { key: "B", text: "先看两个人怎么爬，再决定自己怎么上。", scores: { planning: 2, focus: 1 } },
-          { key: "C", text: "在地上比划动作，先把 beta 想明白。", scores: { planning: 2, control: 1, focus: 1 } },
-          { key: "D", text: "先热身，让身体和节奏先到位。", scores: { endurance: 2, coordination: 1 } }
-        ]
-      },
-      {
-        title: "遇到一个差一点够不到的手点时，你更常：",
-        options: [
-          { key: "A", text: "调脚、抬髋、静态把它摸稳。", scores: { control: 2, focus: 1 } },
-          { key: "B", text: "借摆动或 deadpoint，把时机做出来。", scores: { coordination: 2, execution: 1 } },
-          { key: "C", text: "强锁硬拉，直接狠狠干过去。", scores: { power: 2, execution: 1 } },
-          { key: "D", text: "退一步重排整段节奏，争取更省力。", scores: { endurance: 2, planning: 1 } }
-        ]
-      },
-      {
-        title: "别人给你 beta 时，你通常会：",
-        options: [
-          { key: "A", text: "先听逻辑，再决定要不要照做。", scores: { planning: 2, focus: 1 } },
-          { key: "B", text: "听个大概，上墙自己调成顺手版本。", scores: { execution: 2, coordination: 1 } },
-          { key: "C", text: "只关心 crux 那一下怎么过。", scores: { power: 1, execution: 1, planning: 1 } },
-          { key: "D", text: "更在意整条线怎么配速和休息。", scores: { endurance: 2, planning: 1 } }
-        ]
-      },
-      {
-        title: "你最喜欢看的一类攀岩视频通常是：",
-        options: [
-          { key: "A", text: "动作极干净、脚法很细的技术解。", scores: { control: 2, focus: 1 } },
-          { key: "B", text: "大协调、切脚、dyno 很漂亮的那种。", scores: { coordination: 2, expressive: 1 } },
-          { key: "C", text: "强度拉满、直接把 crux 干爆的片段。", scores: { power: 2, expressive: 1 } },
-          { key: "D", text: "长线路一路稳定顺下来的那种。", scores: { endurance: 2, focus: 1 } }
-        ]
-      },
-      {
-        title: "第一次掉下来后，你最像哪一种反应：",
-        options: [
-          { key: "A", text: "回忆脚法和髋位，找细节误差。", scores: { planning: 2, control: 1 } },
-          { key: "B", text: "马上再试一次，趁身体感觉还在。", scores: { execution: 2, coordination: 1 } },
-          { key: "C", text: "再发狠一点，感觉就差一口力。", scores: { power: 2, execution: 1 } },
-          { key: "D", text: "拆分整段，重排发力顺序和节奏。", scores: { endurance: 1, planning: 2 } }
-        ]
-      },
-      {
-        title: "在岩馆里，你更常被别人评价为：",
-        options: [
-          { key: "A", text: "动作很稳，很细。", scores: { control: 2, focus: 1 } },
-          { key: "B", text: "很会飞，动作很有张力。", scores: { coordination: 2, expressive: 2 } },
-          { key: "C", text: "力量好，敢硬解。", scores: { power: 2, execution: 1 } },
-          { key: "D", text: "很能爬，节奏很稳。", scores: { endurance: 2, focus: 1 } }
-        ]
-      },
-      {
-        title: "你最不怕的题型往往是：",
-        options: [
-          { key: "A", text: "slab、垂壁、需要平衡和脚法的题。", scores: { control: 2, planning: 1 } },
-          { key: "B", text: "协调题、比赛风格题。", scores: { coordination: 2, execution: 1 } },
-          { key: "C", text: "大倾角、力量型 overhang。", scores: { power: 2, execution: 1 } },
-          { key: "D", text: "长线路、持续段、要控泵的题。", scores: { endurance: 2, focus: 1 } }
-        ]
-      },
-      {
-        title: "如果一个动作有点吓人，你更可能：",
-        options: [
-          { key: "A", text: "先找有没有更稳的替代解。", scores: { planning: 2, control: 1, focus: 1 } },
-          { key: "B", text: "时机到了就飞，犹豫更危险。", scores: { coordination: 2, execution: 2 } },
-          { key: "C", text: "只要觉得能锁住，我就会直接上。", scores: { power: 2, execution: 1 } },
-          { key: "D", text: "先算体力账，再决定值不值得赌。", scores: { endurance: 1, planning: 2 } }
-        ]
-      },
-      {
-        title: "你更接近哪种训练状态：",
-        options: [
-          { key: "A", text: "喜欢磨动作，把解法做漂亮。", scores: { control: 2, focus: 1 } },
-          { key: "B", text: "喜欢上墙试，边做边改。", scores: { execution: 2, coordination: 1 } },
-          { key: "C", text: "喜欢冲强度，盯 hardest move。", scores: { power: 2, expressive: 1 } },
-          { key: "D", text: "喜欢一条一条爬，把容量堆起来。", scores: { endurance: 2, focus: 1 } }
-        ]
-      },
-      {
-        title: "你理想中的一次完美攀爬，更像：",
-        options: [
-          { key: "A", text: "几乎没有多余动作，像在解几何题。", scores: { control: 2, planning: 1, focus: 1 } },
-          { key: "B", text: "节奏连续，身体像弹簧一样推进。", scores: { coordination: 2, expressive: 1 } },
-          { key: "C", text: "最难的 crux 被正面狠狠干过去。", scores: { power: 2, execution: 1 } },
-          { key: "D", text: "从下到上都在掌控之中，不乱不慌。", scores: { endurance: 2, planning: 1, focus: 1 } }
-        ]
-      }
+      { id:'Q1', title:'你看一条新线，第一反应是：', options:[{key:'A',text:'这点我能直接够'},{key:'B',text:'这动作能飞'},{key:'C',text:'这脚得站稳'},{key:'D',text:'今天谁也在爬'}] },
+      { id:'Q2', title:'难点掉很多次后，你会：', options:[{key:'A',text:'再冲一把'},{key:'B',text:'换个体位'},{key:'C',text:'硬拉再试'},{key:'D',text:'先看别人'}] },
+      { id:'Q3', title:'你最顺手的过点方式：', options:[{key:'A',text:'站高一够'},{key:'B',text:'爆发一抓'},{key:'C',text:'转髋送腿'},{key:'D',text:'锁臂拉住'}] },
+      { id:'Q4', title:'休息时你更常干什么：', options:[{key:'A',text:'回想脚点路线'},{key:'B',text:'拉伸开髋'},{key:'C',text:'做几下引体'},{key:'D',text:'聊天串场'}] },
+      { id:'Q5', title:'朋友最常夸你：', options:[{key:'A',text:'手真长'},{key:'B',text:'身体真软'},{key:'C',text:'脚下真稳'},{key:'D',text:'人缘真好'}] },
+      { id:'Q6', title:'来岩馆你最期待：', options:[{key:'A',text:'冲一条飞点线'},{key:'B',text:'解一条平衡线'},{key:'C',text:'和朋友一起玩'},{key:'D',text:'挑战力量线'}] },
+      { id:'Q7', title:'看到远点，你第一反应：', options:[{key:'A',text:'先站高'},{key:'B',text:'直接跳'},{key:'C',text:'先转进去'},{key:'D',text:'先找小脚'}] },
+      { id:'Q8', title:'你最想加强：', options:[{key:'A',text:'臂展利用'},{key:'B',text:'动态协调'},{key:'C',text:'柔韧高脚'},{key:'D',text:'锁定引体'}] },
+      { id:'Q9', title:'你在岩馆最常见的状态：', options:[{key:'A',text:'盯着够点研究'},{key:'B',text:'对着飞点反复冲'},{key:'C',text:'抠小脚找平衡'},{key:'D',text:'一边爬一边聊天'}] },
+      { id:'Q10', title:'overhang 卡住时，你更可能：', options:[{key:'A',text:'先锁住再想'},{key:'B',text:'一把爆发过去'},{key:'C',text:'想办法少做一手'},{key:'D',text:'叫朋友一起看'}] },
+      { id:'Q11', title:'你给朋友的第一句建议通常是：', options:[{key:'A',text:'再站高点'},{key:'B',text:'先转个髋'},{key:'C',text:'先稳脚下'},{key:'D',text:'大胆冲一下'}] },
+      { id:'Q12', title:'大家都在 slab 打滑时，你通常：', options:[{key:'A',text:'慢慢压重心'},{key:'B',text:'高抬腿贴墙'},{key:'C',text:'靠手硬做'},{key:'D',text:'边爬边活跃气氛'}] },
+      { id:'Q13', title:'你最常用的省力方式：', options:[{key:'A',text:'站高够点'},{key:'B',text:'拉开体位'},{key:'C',text:'小动态切过去'},{key:'D',text:'锁臂顶过去'}] },
+      { id:'Q14', title:'团爬时你更像：', options:[{key:'A',text:'带气氛的人'},{key:'B',text:'第一个冲飞点的人'},{key:'C',text:'专门抠体位的人'},{key:'D',text:'专门抠脚点的人'}] },
+      { id:'Q15', title:'别人最可能怎么评价你：', options:[{key:'A',text:'点一抓就不掉'},{key:'B',text:'一站就够到'},{key:'C',text:'你认识的人真多'},{key:'D',text:'小点也敢站'}] },
+      { id:'Q16', title:'看到岩馆活动通知，你第一反应：', options:[{key:'A',text:'先报名'},{key:'B',text:'看有没有动态线'},{key:'C',text:'看有没有平衡线'},{key:'D',text:'看有没有力量线'}] },
+      { id:'Q17', title:'状态一般时，你更会依赖：', options:[{key:'A',text:'动作经济性'},{key:'B',text:'重心和脚感'},{key:'C',text:'朋友带状态'},{key:'D',text:'上肢硬实力'}] },
+      { id:'Q18', title:'手点一般但能抓住时，你更可能：', options:[{key:'A',text:'先锁住'},{key:'B',text:'靠体位顺'},{key:'C',text:'快一点切'},{key:'D',text:'先站高'}] },
+      { id:'Q19', title:'周末进岩馆，你通常会先：', options:[{key:'A',text:'找朋友打招呼'},{key:'B',text:'挑一条能静态解的线'},{key:'C',text:'找小脚技术线'},{key:'D',text:'看看有没有体位题'}] },
+      { id:'Q20', title:'你最想让别人记住你的哪一点：', options:[{key:'A',text:'最会社交'},{key:'B',text:'最敢飞'},{key:'C',text:'最有力量'},{key:'D',text:'最会站小点'}] }
     ];
 
-    const RESULT_TYPES = {
-      gorilla: {
-        emoji: "🦍",
-        name: "大猩猩",
-        subtitle: "爆发硬解型",
-        color: "linear-gradient(90deg,#7256ff,#5b41dc)",
-        description: "你最像岩馆里的大猩猩。看到 crux，你的第一反应不是绕，而是狠狠干过去。你依赖拉力、锁定、接触力量和直接执行，短抱石、倾角题和高强度片段通常更容易激发你的状态。",
-        strengths: ["短 crux、力量抱石、倾角线路", "高执行意愿，敢上强度", "在有限尝试里更容易搏上限"],
-        advice: ["补一点脚法和动作经济性，不然很容易把技术题爬成体力题", "长线路要练配速，不要前半段把自己炸空", "失败复盘时别只写‘差一点力’，要写清楚动作问题"]
-      },
-      snowLeopard: {
-        emoji: "🐆",
-        name: "雪豹",
-        subtitle: "静控技术型",
-        color: "linear-gradient(90deg,#28d7b0,#1db98f)",
-        description: "你像雪豹。你不爱把动作做得很吵，你更擅长把动作做得很干净。脚法、髋位、重心、细节精度，是你真正的武器。你在 slab、垂壁和需要静态控制的线路上通常更有表现。",
-        strengths: ["脚法细，动作经济性高", "技术题、平衡题、精度题优势明显", "很适合项目打磨和录像复盘"],
-        advice: ["适当增加大协调和低容错动态题暴露", "别因为追求稳而错失更高效的动态解", "提升接触力量，避免极限 crux 卡上限"]
-      },
-      seal: {
-        emoji: "🦭",
-        name: "海豹",
-        subtitle: "节奏续航型",
-        color: "linear-gradient(90deg,#f0b113,#db9d00)",
-        description: "你像海豹。你会找节奏，会控泵，会在线路里保持连续输出。你不一定是最炸裂的那个，但经常是最稳、最能爬、最不容易乱的人。长线路和持续段通常是你的舒适区。",
-        strengths: ["续航和节奏感好", "长线路、持续段、容量训练更占优", "整体输出稳定，后程不容易崩"],
-        advice: ["短 crux 爆发能力需要专门补", "别一味追求稳，有时要敢于提高攻击性", "可以把长线路拆成强度段训练切换能力"]
-      },
-      goat: {
-        emoji: "🐐",
-        name: "山羊",
-        subtitle: "平衡脚法型",
-        color: "linear-gradient(90deg,#2d94ff,#1779e2)",
-        description: "你像山羊。你对脚点、身体堆叠和平衡很敏感，面对需要小心放脚、稳步推进和不断修正重心的线路时，你往往会比别人更快进入解题状态。",
-        strengths: ["平衡、脚法、重心管理能力强", "slab 和技术垂壁适应性高", "对细碎线路的容错理解更成熟"],
-        advice: ["主动练一点爆发与动态承诺", "别在可飞的动作上反复犹豫", "技术优先没错，但别放弃力量上限建设"]
-      },
-      fox: {
-        emoji: "🦊",
-        name: "狐狸",
-        subtitle: "Beta策划型",
-        color: "linear-gradient(90deg,#ff7d5e,#ef5d3f)",
-        description: "你像狐狸。你不是不敢上墙，而是习惯先想清楚再上墙。你擅长读线、拆动作、理解 beta 逻辑，也更愿意把一次失败变成下一次的有效修正。你属于那种‘脑子先爬完一遍’的人。",
-        strengths: ["读线效率高，flash 潜力好", "失败后修正速度快", "复杂线路和项目型尝试更有优势"],
-        advice: ["别分析过度，把需要勇气的动作一直留在脑内", "给自己设限时读线，缩短决策窗口", "规划强不等于执行强，记得上墙验证"]
-      },
-      sloth: {
-        emoji: "🦥",
-        name: "树懒",
-        subtitle: "佛系体验型",
-        color: "linear-gradient(90deg,#8c9897,#677272)",
-        description: "你像树懒。你不太迷恋一上来就狠狠干，反而更在意舒服、顺、可持续。你享受攀岩带来的专注和节奏感，也更容易用自己的方式慢慢推进。你未必最卷，但常常最稳定、最能长期待在这项运动里。",
-        strengths: ["压力感低，训练可持续性好", "更容易建立自己的稳定节奏", "不容易被一时成绩绑架"],
-        advice: ["别太佛，周期里要有明确目标点", "刻意加入几次高强度冲击，提升上限刺激", "偶尔需要逼自己离开舒适圈"]
-      },
-      collie: {
-        emoji: "🐕",
-        name: "边牧",
-        subtitle: "自律成长型",
-        color: "linear-gradient(90deg,#ff4ea7,#d42a82)",
-        description: "你像边牧。你对训练、复盘、节奏和进步都很敏感，往往不是靠单次爆种赢，而是靠持续执行把自己一点点做强。你在系统训练、项目推进和长期成长上通常非常有优势。",
-        strengths: ["执行力和训练自律性高", "长期进步曲线更平稳", "更愿意做复盘、做记录、做修正"],
-        advice: ["别把自己练成只会执行计划的人，要保留临场灵活性", "偶尔允许自己更野一点、更玩一点", "注意恢复，不要把每次训练都做成作业"]
-      }
+    const MAPPING = {
+      Q1: {A:'长臂猿', B:'雪豹', C:'岩羊', D:'高山土拨鼠'},
+      Q2: {A:'雪豹', B:'高山灵猫', C:'灰熊', D:'高山土拨鼠'},
+      Q3: {A:'长臂猿', B:'雪豹', C:'高山灵猫', D:'灰熊'},
+      Q4: {A:'岩羊', B:'高山灵猫', C:'灰熊', D:'高山土拨鼠'},
+      Q5: {A:'长臂猿', B:'高山灵猫', C:'岩羊', D:'高山土拨鼠'},
+      Q6: {A:'雪豹', B:'岩羊', C:'高山土拨鼠', D:'灰熊'},
+      Q7: {A:'长臂猿', B:'雪豹', C:'高山灵猫', D:'岩羊'},
+      Q8: {A:'长臂猿', B:'雪豹', C:'高山灵猫', D:'灰熊'},
+      Q9: {A:'长臂猿', B:'雪豹', C:'岩羊', D:'高山土拨鼠'},
+      Q10: {A:'灰熊', B:'雪豹', C:'长臂猿', D:'高山土拨鼠'},
+      Q11: {A:'长臂猿', B:'高山灵猫', C:'岩羊', D:'雪豹'},
+      Q12: {A:'岩羊', B:'高山灵猫', C:'灰熊', D:'高山土拨鼠'},
+      Q13: {A:'长臂猿', B:'高山灵猫', C:'雪豹', D:'灰熊'},
+      Q14: {A:'高山土拨鼠', B:'雪豹', C:'高山灵猫', D:'岩羊'},
+      Q15: {A:'灰熊', B:'长臂猿', C:'高山土拨鼠', D:'岩羊'},
+      Q16: {A:'高山土拨鼠', B:'雪豹', C:'岩羊', D:'灰熊'},
+      Q17: {A:'长臂猿', B:'岩羊', C:'高山土拨鼠', D:'灰熊'},
+      Q18: {A:'灰熊', B:'高山灵猫', C:'雪豹', D:'长臂猿'},
+      Q19: {A:'高山土拨鼠', B:'长臂猿', C:'岩羊', D:'高山灵猫'},
+      Q20: {A:'高山土拨鼠', B:'雪豹', C:'灰熊', D:'岩羊'}
     };
 
-    const TYPE_FORMULAS = {
-      gorilla: { power: 0.46, execution: 0.24, expressive: 0.12, coordination: 0.10, planning: 0.08 },
-      snowLeopard: { control: 0.38, focus: 0.20, planning: 0.18, endurance: 0.14, coordination: 0.10 },
-      seal: { endurance: 0.40, focus: 0.18, coordination: 0.16, planning: 0.14, expressive: 0.12 },
-      goat: { control: 0.34, planning: 0.22, focus: 0.18, endurance: 0.16, coordination: 0.10 },
-      fox: { planning: 0.44, focus: 0.18, control: 0.14, execution: 0.14, endurance: 0.10 },
-      sloth: { focus: 0.28, endurance: 0.28, planning: 0.16, control: 0.12, expressive: 0.08, execution: 0.08 },
-      collie: { planning: 0.28, execution: 0.24, focus: 0.18, endurance: 0.14, control: 0.08, coordination: 0.08 }
+    const CORE_HITS = {
+      '长臂猿': ['Q1A','Q7A','Q13A'],
+      '雪豹': ['Q3B','Q10B','Q20B'],
+      '高山灵猫': ['Q3C','Q11B','Q18B'],
+      '灰熊': ['Q3D','Q10A','Q18A'],
+      '岩羊': ['Q1C','Q12A','Q17B'],
+      '高山土拨鼠': ['Q6C','Q14A','Q20A']
     };
+
+    const Q20_TIE = { A:'高山土拨鼠', B:'雪豹', C:'灰熊', D:'岩羊' };
+    const ORDER = ['长臂猿','雪豹','高山灵猫','灰熊','岩羊','高山土拨鼠'];
 
     const state = {
-      current: 0,
+      index: 0,
       answers: Array(QUESTIONS.length).fill(null),
       result: null,
-      scores: null,
-      sessionId: getSessionId()
+      transitioning: false,
+      sessionId: null
     };
 
     const introView = document.getElementById('introView');
     const quizView = document.getElementById('quizView');
     const resultView = document.getElementById('resultView');
-    const counterText = document.getElementById('counterText');
-    const dotsWrap = document.getElementById('dotsWrap');
-    const questionTitle = document.getElementById('questionTitle');
-    const optionList = document.getElementById('optionList');
+    const questionShell = document.getElementById('questionShell');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressBar = document.getElementById('progressBar');
+    const progressHint = document.getElementById('progressHint');
 
     document.getElementById('startBtn').addEventListener('click', startQuiz);
-    document.getElementById('prevBtn').addEventListener('click', goPrev);
+    document.getElementById('viewRuleBtn').addEventListener('click', () => {
+      alert('本版为 20 题、每题 4 选 1 的行为取向测试。每题所选选项会给对应动物 +1 分，最高分为主倾向。若最高分并列，则依次比较核心题命中数，再尝试用 Q20 决胜。');
+    });
+    document.getElementById('prevBtn').addEventListener('click', prevQuestion);
     document.getElementById('restartBtn').addEventListener('click', resetQuiz);
     document.getElementById('retestBtn').addEventListener('click', resetQuiz);
-    document.getElementById('shareBtn').addEventListener('click', copySummary);
+    document.getElementById('copyBtn').addEventListener('click', copySummary);
 
-    document.addEventListener('DOMContentLoaded', () => {
+    init();
+
+    function init() {
+      state.sessionId = getSessionId();
       logVisitOnce();
-      renderDots();
-    });
+    }
 
     function startQuiz() {
-      setActive('quiz');
+      introView.classList.add('hidden');
+      resultView.classList.add('hidden');
+      quizView.classList.remove('hidden');
+      renderQuestion(true);
+    }
+
+    function resetQuiz() {
+      state.index = 0;
+      state.answers = Array(QUESTIONS.length).fill(null);
+      state.result = null;
+      state.transitioning = false;
+      resultView.classList.add('hidden');
+      quizView.classList.add('hidden');
+      introView.classList.remove('hidden');
+    }
+
+    function prevQuestion() {
+      if (state.transitioning || state.index === 0) return;
+      state.index -= 1;
       renderQuestion();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function setActive(view) {
-      introView.classList.toggle('active', view === 'intro');
-      quizView.classList.toggle('active', view === 'quiz');
-      resultView.classList.toggle('active', view === 'result');
-    }
+    function renderQuestion(firstPaint = false) {
+      const q = QUESTIONS[state.index];
+      progressLabel.textContent = `第 ${state.index + 1} / ${QUESTIONS.length} 题`;
+      progressHint.textContent = '';
+      progressBar.style.width = `${((state.index) / QUESTIONS.length) * 100}%`;
 
-    function renderDots() {
-      dotsWrap.innerHTML = '';
-      QUESTIONS.forEach((_, idx) => {
-        const d = document.createElement('span');
-        d.className = 'dot';
-        if (state.answers[idx]) d.classList.add('done');
-        if (idx === state.current && !state.result) d.classList.add('current');
-        dotsWrap.appendChild(d);
-      });
-    }
-
-    function renderQuestion() {
-      const q = QUESTIONS[state.current];
-      counterText.textContent = `Q${state.current + 1} / ${QUESTIONS.length}`;
-      questionTitle.textContent = q.title;
-      optionList.innerHTML = '';
-
-      q.options.forEach(option => {
-        const btn = document.createElement('button');
-        btn.className = 'option';
-        const saved = state.answers[state.current];
-        if (saved && saved.optionKey === option.key) btn.classList.add('selected');
-        btn.innerHTML = `<span class="badge">${option.key}</span><span class="option-text">${option.text}</span>`;
-        btn.addEventListener('click', () => selectOption(option));
-        optionList.appendChild(btn);
+      const selected = state.answers[state.index];
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      if (!firstPaint) card.classList.add('entering');
+      card.innerHTML = `
+        <h2 class="question-title">${q.title}</h2>
+        <div class="options">
+          ${q.options.map(opt => `
+            <button class="option ${selected === opt.key ? 'active' : ''}" data-key="${opt.key}">
+              <span class="option-tag">${opt.key}</span>
+              <span class="option-text">${opt.text}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+      card.querySelectorAll('.option').forEach(btn => {
+        btn.addEventListener('click', () => selectOption(btn.dataset.key));
       });
 
-      renderDots();
-    }
+      questionShell.innerHTML = '';
+      questionShell.appendChild(card);
+      document.getElementById('prevBtn').disabled = state.index === 0;
 
-    function selectOption(option) {
-      state.answers[state.current] = {
-        questionIndex: state.current,
-        optionKey: option.key,
-        text: option.text,
-        scores: option.scores
-      };
-
-      if (state.current < QUESTIONS.length - 1) {
-        state.current += 1;
-        renderQuestion();
-      } else {
-        calculateResult();
-        renderResult();
+      if (!firstPaint) {
+        requestAnimationFrame(() => {
+          card.classList.add('enter-active');
+        });
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function goPrev() {
-      if (state.current === 0) return;
-      state.current -= 1;
-      renderQuestion();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function selectOption(key) {
+      if (state.transitioning) return;
+      state.answers[state.index] = key;
+      const currentCard = questionShell.querySelector('.question-card');
+      if (!currentCard) return;
+      currentCard.querySelectorAll('.option').forEach(el => el.disabled = true);
+      const active = currentCard.querySelector(`[data-key="${key}"]`);
+      if (active) active.classList.add('active');
+
+      if (state.index === QUESTIONS.length - 1) {
+        state.transitioning = true;
+        currentCard.classList.add('leaving');
+        setTimeout(() => {
+          finishQuiz();
+          state.transitioning = false;
+        }, 180);
+        return;
+      }
+
+      state.transitioning = true;
+      currentCard.classList.add('leaving');
+      setTimeout(() => {
+        state.index += 1;
+        renderQuestion();
+        state.transitioning = false;
+      }, 180);
     }
 
-    function calculateResult() {
-      const totals = { control: 0, coordination: 0, power: 0, endurance: 0, planning: 0, execution: 0, focus: 0, expressive: 0 };
-      state.answers.forEach(a => {
-        Object.entries(a.scores).forEach(([k, v]) => totals[k] += v);
-      });
-
-      const raw = Object.entries(TYPE_FORMULAS).map(([typeKey, formula]) => {
-        const score = Object.entries(formula).reduce((sum, [k, weight]) => sum + (totals[k] || 0) * weight, 0);
-        return { typeKey, score: round(score) };
-      }).sort((a, b) => b.score - a.score);
-
-      state.scores = totals;
-      state.result = {
-        primaryType: raw[0].typeKey,
-        secondaryType: raw[1].typeKey,
-        rawTypeScores: raw,
-        fitGap: round(raw[0].score - raw[1].score)
-      };
-
+    function finishQuiz() {
+      const result = evaluate();
+      state.result = result;
+      quizView.classList.add('hidden');
+      resultView.classList.remove('hidden');
+      renderResult(result);
       logEvent('result', {
         sessionId: state.sessionId,
         siteName: CONFIG.siteName,
-        answers: state.answers.map((a, idx) => ({ question: idx + 1, optionKey: a.optionKey, text: a.text })),
-        rawScores: state.scores,
-        result: {
-          primaryType: state.result.primaryType,
-          primaryScore: raw[0].score,
-          secondaryType: state.result.secondaryType,
-          secondaryScore: raw[1].score,
-          fitGap: state.result.fitGap,
-          rawTypeScores: raw
-        },
+        timestamp: new Date().toISOString(),
         referrer: document.referrer || 'direct',
         screen: `${window.screen.width}x${window.screen.height}`,
         userAgent: navigator.userAgent,
         path: location.pathname,
-        timestamp: new Date().toISOString()
+        answers: QUESTIONS.map((q, i) => ({ questionId: q.id, answer: state.answers[i] })),
+        result: {
+          primaryType: result.primaryType,
+          primaryScore: result.primaryScore,
+          secondaryType: result.negativeType,
+          secondaryScore: result.negativeScore,
+          fitGap: result.fitGap,
+          rawTypeScores: result.scores,
+          tieState: result.tieState,
+          primaryCandidates: result.primaryCandidates
+        },
+        rawScores: result.scores
       });
     }
 
-    function renderResult() {
-      const primary = RESULT_TYPES[state.result.primaryType];
-      const secondary = RESULT_TYPES[state.result.secondaryType];
-
-      document.getElementById('resultEmoji').textContent = primary.emoji;
-      document.getElementById('resultTitle').textContent = `${primary.name} · ${primary.subtitle}`;
-      document.getElementById('resultSubtitle').textContent = `副型偏向：${secondary.name} · ${secondary.subtitle}`;
-      document.getElementById('resultDesc').textContent = primary.description;
-      fillList('strengthList', primary.strengths);
-      fillList('adviceList', primary.advice);
-      renderScoreBoard();
-
-      setActive('result');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function renderScoreBoard() {
-      const board = document.getElementById('scoreBoard');
-      const max = Math.max(...state.result.rawTypeScores.map(x => x.score), 1);
-      board.innerHTML = '';
-      state.result.rawTypeScores.forEach(item => {
-        const type = RESULT_TYPES[item.typeKey];
-        const percent = Math.max(4, (item.score / max) * 100);
-        const row = document.createElement('div');
-        row.className = 'score-row';
-        row.innerHTML = `
-          <div class="score-top">
-            <span>${type.emoji} ${type.name}</span>
-            <span>${item.score}</span>
-          </div>
-          <div class="track"><div class="fill" style="width:${percent}%; background:${type.color}"></div></div>
-        `;
-        board.appendChild(row);
+    function evaluate() {
+      const scores = Object.fromEntries(ORDER.map(name => [name, 0]));
+      const picks = [];
+      QUESTIONS.forEach((q, i) => {
+        const ans = state.answers[i];
+        if (!ans) return;
+        const animal = MAPPING[q.id][ans];
+        scores[animal] += 1;
+        picks.push(q.id + ans);
       });
+
+      const maxScore = Math.max(...Object.values(scores));
+      let primaryCandidates = ORDER.filter(name => scores[name] === maxScore);
+      let tieState = 'resolved';
+      let primaryType = primaryCandidates[0];
+
+      if (primaryCandidates.length > 1) {
+        const coreHits = Object.fromEntries(primaryCandidates.map(name => [name, CORE_HITS[name].filter(code => picks.includes(code)).length]));
+        const maxCore = Math.max(...Object.values(coreHits));
+        const coreWinners = primaryCandidates.filter(name => coreHits[name] === maxCore);
+        if (coreWinners.length === 1) {
+          primaryType = coreWinners[0];
+        } else {
+          const q20 = state.answers[QUESTIONS.length - 1];
+          const q20Winner = Q20_TIE[q20];
+          if (q20Winner && coreWinners.includes(q20Winner)) {
+            primaryType = q20Winner;
+          } else {
+            tieState = 'needs_confirmation';
+            primaryCandidates = coreWinners;
+            primaryType = coreWinners.join(' / ');
+          }
+        }
+      }
+
+      const minScore = Math.min(...Object.values(scores));
+      let negativeCandidates = ORDER.filter(name => scores[name] === minScore);
+      let negativeType = negativeCandidates[0];
+      if (negativeCandidates.length > 1) {
+        const coreHitsLow = Object.fromEntries(negativeCandidates.map(name => [name, CORE_HITS[name].filter(code => picks.includes(code)).length]));
+        const minCore = Math.min(...Object.values(coreHitsLow));
+        const lowCore = negativeCandidates.filter(name => coreHitsLow[name] === minCore);
+        negativeType = lowCore[0];
+      }
+
+      const sortedScores = [...ORDER].sort((a,b) => scores[b] - scores[a]);
+      const topResolved = tieState === 'resolved' ? primaryType : primaryCandidates[0];
+      const secondCandidate = sortedScores.find(name => name !== topResolved) || sortedScores[1] || topResolved;
+      return {
+        primaryType,
+        primaryScore: maxScore,
+        primaryCandidates,
+        negativeType,
+        negativeScore: minScore,
+        fitGap: scores[topResolved] - (scores[secondCandidate] ?? 0),
+        tieState,
+        scores
+      };
     }
 
-    function fillList(id, items) {
-      document.getElementById(id).innerHTML = items.map(x => `<li>${x}</li>`).join('');
-    }
+    function renderResult(result) {
+      const unresolved = result.tieState === 'needs_confirmation';
+      const primaryText = unresolved ? `你的主型介于 ${result.primaryCandidates.join(' 与 ')} 之间` : `你的主倾向是：${result.primaryType}`;
+      document.getElementById('resultTitle').textContent = primaryText;
+      document.getElementById('resultSummary').textContent = unresolved
+        ? '按照最高分、核心题命中数与 Q20 仍无法完全区分，因此当前结果保留为双候选。'
+        : '结果由 20 题累计得分得到；若出现并列，已按核心题命中数和 Q20 决胜规则处理。';
 
-    function resetQuiz() {
-      state.current = 0;
-      state.answers = Array(QUESTIONS.length).fill(null);
-      state.result = null;
-      state.scores = null;
-      renderDots();
-      setActive('intro');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const primaryDisplay = unresolved ? ANIMALS[result.primaryCandidates[0]] : ANIMALS[result.primaryType];
+      document.getElementById('primaryName').textContent = unresolved ? result.primaryCandidates.join(' / ') : primaryDisplay.key;
+      document.getElementById('primaryMeta').textContent = unresolved
+        ? result.primaryCandidates.map(name => ANIMALS[name].subtitle).join(' ｜ ')
+        : primaryDisplay.subtitle;
+      document.getElementById('primaryDesc').textContent = unresolved
+        ? result.primaryCandidates.map(name => `${name}：${ANIMALS[name].desc}`).join(' ')
+        : primaryDisplay.desc;
+      document.getElementById('primaryScoreLine').textContent = unresolved
+        ? `并列最高分：${result.primaryScore} 分`
+        : `累计得分：${result.primaryScore} / 20`;
+
+      const negative = ANIMALS[result.negativeType];
+      document.getElementById('negativeName').textContent = negative.key;
+      document.getElementById('negativeMeta').textContent = negative.subtitle;
+      document.getElementById('negativeDesc').textContent = `在当前这次作答中，你最少表现出的是这一类取向：${negative.desc} 这不代表你不能做到，而是说明它不是你最自然的默认模式。`;
+      document.getElementById('negativeScoreLine').textContent = `累计得分：${result.negativeScore} / 20`;
     }
 
     function copySummary() {
       if (!state.result) return;
-      const primary = RESULT_TYPES[state.result.primaryType];
-      const secondary = RESULT_TYPES[state.result.secondaryType];
-      const text = `我测出来的攀岩动物原型是：${primary.name}（${primary.subtitle}），副型是 ${secondary.name}（${secondary.subtitle}）。`;
-      navigator.clipboard.writeText(text).then(() => {
+      const unresolved = state.result.tieState === 'needs_confirmation';
+      const summary = unresolved
+        ? `我在《探索你的攀岩灵魂》中的结果介于 ${state.result.primaryCandidates.join(' 与 ')} 之间；当前负倾向为 ${state.result.negativeType}。`
+        : `我在《探索你的攀岩灵魂》中的主倾向是 ${state.result.primaryType}，负倾向是 ${state.result.negativeType}。`;
+      navigator.clipboard.writeText(summary).then(() => {
         alert('结果摘要已复制。');
       }).catch(() => {
-        alert('复制失败，请手动复制。');
+        alert('复制失败，请手动复制页面内容。');
       });
     }
 
@@ -865,19 +456,18 @@
       const key = 'climb_animal_quiz_session_id';
       const existing = localStorage.getItem(key);
       if (existing) return existing;
-      const value = `sess_${Math.random().toString(36).slice(2)}_${Date.now()}`;
-      localStorage.setItem(key, value);
-      return value;
+      const id = `sess_${Math.random().toString(36).slice(2)}_${Date.now()}`;
+      localStorage.setItem(key, id);
+      return id;
     }
 
     function logVisitOnce() {
-      const key = 'climb_animal_quiz_last_visit';
+      const key = 'climb_animal_quiz_last_visit_log';
       const last = Number(localStorage.getItem(key) || 0);
       const now = Date.now();
-      const cooldown = CONFIG.visitCooldownHours * 3600 * 1000;
+      const cooldown = CONFIG.visitCooldownHours * 60 * 60 * 1000;
       if (now - last < cooldown) return;
       localStorage.setItem(key, String(now));
-
       logEvent('visit', {
         sessionId: state.sessionId,
         siteName: CONFIG.siteName,
@@ -905,10 +495,6 @@
         headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
         body
       }).catch(() => {});
-    }
-
-    function round(n) {
-      return Math.round(n * 100) / 100;
     }
   </script>
 </body>
