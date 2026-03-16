@@ -2,113 +2,60 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>攀岩人格测试｜统计看板</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>攀岩动物测试｜统计页</title>
   <style>
-    :root {
-      --bg1: #f7eddc;
-      --bg2: #dceee6;
-      --bg3: #f8dfd7;
-      --ink: #23242b;
-      --sub: #646975;
-      --card: rgba(255,255,255,.82);
-      --line: rgba(35,36,43,.08);
-      --shadow: 0 14px 30px rgba(87, 70, 40, .12);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif; color:var(--ink);
-      background:
-        radial-gradient(circle at 14% 18%, rgba(255, 217, 153, .34) 0 4%, transparent 4.5%),
-        radial-gradient(circle at 80% 14%, rgba(177, 227, 196, .38) 0 4.6%, transparent 5%),
-        radial-gradient(circle at 18% 72%, rgba(255, 176, 176, .24) 0 5%, transparent 5.5%),
-        linear-gradient(135deg, var(--bg1) 0%, var(--bg3) 46%, var(--bg2) 100%);
-      min-height:100vh;
-      padding:18px 14px 30px;
-    }
-    .wrap{max-width:430px;margin:0 auto}
-    .card{background:var(--card); border:1px solid rgba(255,255,255,.56); border-radius:28px; box-shadow:var(--shadow); backdrop-filter:blur(7px)}
-    .hero{padding:20px 18px 16px; text-align:center; margin-bottom:14px}
-    .hero h1{margin:8px 0 6px; font-size:28px; line-height:1.2}
-    .hero p{margin:0; color:var(--sub); font-size:14px; font-weight:700}
-    .stats{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px}
-    .stat{padding:14px 12px; border-radius:20px; background:rgba(255,255,255,.68); border:1px solid var(--line)}
-    .stat .label{font-size:12px; color:var(--sub); font-weight:800}
-    .stat .value{margin-top:4px; font-size:24px; font-weight:900}
-    .list{padding:14px}
-    .row{padding:14px 14px 12px; border-radius:20px; background:rgba(255,255,255,.68); border:1px solid var(--line); margin-bottom:10px}
-    .top{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; font-weight:900}
-    .top span:last-child{font-size:14px; color:var(--sub)}
-    .track{height:12px; width:100%; background:#edf0f4; border-radius:999px; overflow:hidden}
-    .fill{height:100%; width:0; border-radius:inherit}
-    .tiny{text-align:center; color:rgba(35,36,43,.52); font-size:12px; margin-top:12px}
-    button{width:100%; border:none; border-radius:999px; padding:14px 18px; font-size:16px; font-weight:900; cursor:pointer; background:#ea7b26; color:#fff; box-shadow:0 10px 20px rgba(234,123,38,.24)}
+    body { font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif; background:#fff; color:#221b17; margin:0; }
+    .wrap { max-width: 900px; margin:0 auto; padding: 28px 16px 40px; }
+    .panel { border:1px solid #ece7df; border-radius:24px; box-shadow:0 10px 30px rgba(80,52,22,.06); padding:24px; }
+    h1 { margin:0 0 10px; font-size: 32px; }
+    .muted { color:#78695d; }
+    .stats { display:grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top:18px; }
+    .card { border:1px solid #ece7df; border-radius:18px; padding:16px; }
+    .n { font-size:28px; font-weight:800; }
+    .bars { display:grid; gap:12px; margin-top:18px; }
+    .row { display:grid; gap:6px; }
+    .top { display:flex; justify-content:space-between; gap:12px; font-size:14px; }
+    .track { height:10px; background:#f4eee6; border-radius:999px; overflow:hidden; }
+    .fill { height:100%; background:linear-gradient(90deg,#c95a1d,#ef8f39); width:0; }
+    @media (max-width:720px){ .stats { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="card hero">
-      <div style="font-size:34px">🦍 🐆 🦭 🐐 🦊 🦥 🐕</div>
-      <h1>攀岩人格测试统计</h1>
-      <p>这是一个更像视频里展示方式的结果分布页。</p>
+    <div class="panel">
+      <h1>攀岩动物测试统计页</h1>
+      <div class="muted" id="updatedAt">加载中…</div>
       <div class="stats">
-        <div class="stat"><div class="label">总访问</div><div id="visits" class="value">-</div></div>
-        <div class="stat"><div class="label">完成次数</div><div id="completions" class="value">-</div></div>
-        <div class="stat" style="grid-column:1 / -1"><div class="label">完成率</div><div id="completionRate" class="value">-</div></div>
+        <div class="card"><div class="muted">访问量</div><div class="n" id="visits">0</div></div>
+        <div class="card"><div class="muted">完成量</div><div class="n" id="completions">0</div></div>
+        <div class="card"><div class="muted">完成率</div><div class="n" id="rate">0%</div></div>
+        <div class="card"><div class="muted">待确认并列</div><div class="n" id="unresolved">0</div></div>
       </div>
-    </section>
-
-    <section class="card list" id="listWrap"></section>
-    <button id="refreshBtn">刷新数据</button>
-    <div class="tiny">此页需要 Apps Script 开启 summary 接口，地址格式为：你的 Web App URL + ?action=summary</div>
+      <div class="bars" id="bars"></div>
+    </div>
   </div>
   <script>
     const SUMMARY_URL = 'https://script.google.com/macros/s/AKfycbziDSM4ebxR2YQ0Hrj161XdAOCJ7TYbwZTFBKPZp1Mbu7j5nlKWYtL7bzeYh2Iz1J9t/exec';
-    const META = {
-      gorilla: { emoji:'🦍', name:'大猩猩', color:'linear-gradient(90deg,#7256ff,#5b41dc)' },
-      snowLeopard: { emoji:'🐆', name:'雪豹', color:'linear-gradient(90deg,#28d7b0,#1db98f)' },
-      seal: { emoji:'🦭', name:'海豹', color:'linear-gradient(90deg,#f0b113,#db9d00)' },
-      goat: { emoji:'🐐', name:'山羊', color:'linear-gradient(90deg,#2d94ff,#1779e2)' },
-      fox: { emoji:'🦊', name:'狐狸', color:'linear-gradient(90deg,#ff7d5e,#ef5d3f)' },
-      sloth: { emoji:'🦥', name:'树懒', color:'linear-gradient(90deg,#8c9897,#677272)' },
-      collie: { emoji:'🐕', name:'边牧', color:'linear-gradient(90deg,#ff4ea7,#d42a82)' }
-    };
-
-    document.getElementById('refreshBtn').addEventListener('click', loadSummary);
-    loadSummary();
-
-    function loadSummary() {
-      if (!SUMMARY_URL.startsWith('http')) {
-        alert('先把 SUMMARY_URL 改成你的 Web App URL?action=summary');
-        return;
-      }
-      fetch(SUMMARY_URL)
-        .then(r => r.json())
-        .then(data => render(data))
-        .catch(() => alert('读取失败。请检查 Apps Script 是否已按增强版脚本重新部署。'));
+    async function load() {
+      const res = await fetch(SUMMARY_URL);
+      const data = await res.json();
+      document.getElementById('visits').textContent = data.visits || 0;
+      document.getElementById('completions').textContent = data.completions || 0;
+      document.getElementById('rate').textContent = `${data.completionRate || 0}%`;
+      document.getElementById('unresolved').textContent = data.unresolvedCount || 0;
+      document.getElementById('updatedAt').textContent = `更新时间：${data.updatedAt || ''}`;
+      const bars = document.getElementById('bars');
+      bars.innerHTML = (data.breakdown || []).map(item => `
+        <div class="row">
+          <div class="top"><span>${item.typeKey}</span><span>${item.count} 人 · ${item.percent}%</span></div>
+          <div class="track"><div class="fill" style="width:${item.percent}%"></div></div>
+        </div>
+      `).join('');
     }
-
-    function render(data) {
-      document.getElementById('visits').textContent = data.visits ?? '-';
-      document.getElementById('completions').textContent = data.completions ?? '-';
-      document.getElementById('completionRate').textContent = (data.completionRate ?? '-') + '%';
-
-      const wrap = document.getElementById('listWrap');
-      wrap.innerHTML = '';
-      (data.breakdown || []).forEach(item => {
-        const meta = META[item.typeKey] || { emoji:'❓', name:item.typeKey, color:'linear-gradient(90deg,#aaa,#888)' };
-        const row = document.createElement('div');
-        row.className = 'row';
-        row.innerHTML = `
-          <div class="top">
-            <span>${meta.emoji} ${meta.name}</span>
-            <span>${item.count} 人 · ${item.percent}%</span>
-          </div>
-          <div class="track"><div class="fill" style="width:${item.percent}%; background:${meta.color}"></div></div>
-        `;
-        wrap.appendChild(row);
-      });
-    }
+    load().catch(err => {
+      document.getElementById('updatedAt').textContent = '加载失败：' + err;
+    });
   </script>
 </body>
 </html>
