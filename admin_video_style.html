@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>攀岩人格测试｜统计看板</title>
+  <style>
+    :root {
+      --bg1: #f7eddc;
+      --bg2: #dceee6;
+      --bg3: #f8dfd7;
+      --ink: #23242b;
+      --sub: #646975;
+      --card: rgba(255,255,255,.82);
+      --line: rgba(35,36,43,.08);
+      --shadow: 0 14px 30px rgba(87, 70, 40, .12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif; color:var(--ink);
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255, 217, 153, .34) 0 4%, transparent 4.5%),
+        radial-gradient(circle at 80% 14%, rgba(177, 227, 196, .38) 0 4.6%, transparent 5%),
+        radial-gradient(circle at 18% 72%, rgba(255, 176, 176, .24) 0 5%, transparent 5.5%),
+        linear-gradient(135deg, var(--bg1) 0%, var(--bg3) 46%, var(--bg2) 100%);
+      min-height:100vh;
+      padding:18px 14px 30px;
+    }
+    .wrap{max-width:430px;margin:0 auto}
+    .card{background:var(--card); border:1px solid rgba(255,255,255,.56); border-radius:28px; box-shadow:var(--shadow); backdrop-filter:blur(7px)}
+    .hero{padding:20px 18px 16px; text-align:center; margin-bottom:14px}
+    .hero h1{margin:8px 0 6px; font-size:28px; line-height:1.2}
+    .hero p{margin:0; color:var(--sub); font-size:14px; font-weight:700}
+    .stats{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px}
+    .stat{padding:14px 12px; border-radius:20px; background:rgba(255,255,255,.68); border:1px solid var(--line)}
+    .stat .label{font-size:12px; color:var(--sub); font-weight:800}
+    .stat .value{margin-top:4px; font-size:24px; font-weight:900}
+    .list{padding:14px}
+    .row{padding:14px 14px 12px; border-radius:20px; background:rgba(255,255,255,.68); border:1px solid var(--line); margin-bottom:10px}
+    .top{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; font-weight:900}
+    .top span:last-child{font-size:14px; color:var(--sub)}
+    .track{height:12px; width:100%; background:#edf0f4; border-radius:999px; overflow:hidden}
+    .fill{height:100%; width:0; border-radius:inherit}
+    .tiny{text-align:center; color:rgba(35,36,43,.52); font-size:12px; margin-top:12px}
+    button{width:100%; border:none; border-radius:999px; padding:14px 18px; font-size:16px; font-weight:900; cursor:pointer; background:#ea7b26; color:#fff; box-shadow:0 10px 20px rgba(234,123,38,.24)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card hero">
+      <div style="font-size:34px">🦍 🐆 🦭 🐐 🦊 🦥 🐕</div>
+      <h1>攀岩人格测试统计</h1>
+      <p>这是一个更像视频里展示方式的结果分布页。</p>
+      <div class="stats">
+        <div class="stat"><div class="label">总访问</div><div id="visits" class="value">-</div></div>
+        <div class="stat"><div class="label">完成次数</div><div id="completions" class="value">-</div></div>
+        <div class="stat" style="grid-column:1 / -1"><div class="label">完成率</div><div id="completionRate" class="value">-</div></div>
+      </div>
+    </section>
+
+    <section class="card list" id="listWrap"></section>
+    <button id="refreshBtn">刷新数据</button>
+    <div class="tiny">此页需要 Apps Script 开启 summary 接口，地址格式为：你的 Web App URL + ?action=summary</div>
+  </div>
+  <script>
+    const SUMMARY_URL = 'https://script.google.com/macros/s/AKfycbziDSM4ebxR2YQ0Hrj161XdAOCJ7TYbwZTFBKPZp1Mbu7j5nlKWYtL7bzeYh2Iz1J9t/exec';
+    const META = {
+      gorilla: { emoji:'🦍', name:'大猩猩', color:'linear-gradient(90deg,#7256ff,#5b41dc)' },
+      snowLeopard: { emoji:'🐆', name:'雪豹', color:'linear-gradient(90deg,#28d7b0,#1db98f)' },
+      seal: { emoji:'🦭', name:'海豹', color:'linear-gradient(90deg,#f0b113,#db9d00)' },
+      goat: { emoji:'🐐', name:'山羊', color:'linear-gradient(90deg,#2d94ff,#1779e2)' },
+      fox: { emoji:'🦊', name:'狐狸', color:'linear-gradient(90deg,#ff7d5e,#ef5d3f)' },
+      sloth: { emoji:'🦥', name:'树懒', color:'linear-gradient(90deg,#8c9897,#677272)' },
+      collie: { emoji:'🐕', name:'边牧', color:'linear-gradient(90deg,#ff4ea7,#d42a82)' }
+    };
+
+    document.getElementById('refreshBtn').addEventListener('click', loadSummary);
+    loadSummary();
+
+    function loadSummary() {
+      if (!SUMMARY_URL.startsWith('http')) {
+        alert('先把 SUMMARY_URL 改成你的 Web App URL?action=summary');
+        return;
+      }
+      fetch(SUMMARY_URL)
+        .then(r => r.json())
+        .then(data => render(data))
+        .catch(() => alert('读取失败。请检查 Apps Script 是否已按增强版脚本重新部署。'));
+    }
+
+    function render(data) {
+      document.getElementById('visits').textContent = data.visits ?? '-';
+      document.getElementById('completions').textContent = data.completions ?? '-';
+      document.getElementById('completionRate').textContent = (data.completionRate ?? '-') + '%';
+
+      const wrap = document.getElementById('listWrap');
+      wrap.innerHTML = '';
+      (data.breakdown || []).forEach(item => {
+        const meta = META[item.typeKey] || { emoji:'❓', name:item.typeKey, color:'linear-gradient(90deg,#aaa,#888)' };
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = `
+          <div class="top">
+            <span>${meta.emoji} ${meta.name}</span>
+            <span>${item.count} 人 · ${item.percent}%</span>
+          </div>
+          <div class="track"><div class="fill" style="width:${item.percent}%; background:${meta.color}"></div></div>
+        `;
+        wrap.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>
