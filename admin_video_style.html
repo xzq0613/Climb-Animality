@@ -6,18 +6,19 @@
   <title>攀岩动物测试｜统计页</title>
   <style>
     body { font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif; background:#fff; color:#221b17; margin:0; }
-    .wrap { max-width: 900px; margin:0 auto; padding: 28px 16px 40px; }
+    .wrap { max-width: 960px; margin:0 auto; padding: 28px 16px 40px; }
     .panel { border:1px solid #ece7df; border-radius:24px; box-shadow:0 10px 30px rgba(80,52,22,.06); padding:24px; }
     h1 { margin:0 0 10px; font-size: 32px; }
     .muted { color:#78695d; }
     .stats { display:grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top:18px; }
-    .card { border:1px solid #ece7df; border-radius:18px; padding:16px; }
+    .card { border:1px solid #ece7df; border-radius:18px; padding:16px; background:#fff; }
     .n { font-size:28px; font-weight:800; }
     .bars { display:grid; gap:12px; margin-top:18px; }
     .row { display:grid; gap:6px; }
     .top { display:flex; justify-content:space-between; gap:12px; font-size:14px; }
     .track { height:10px; background:#f4eee6; border-radius:999px; overflow:hidden; }
     .fill { height:100%; background:linear-gradient(90deg,#c95a1d,#ef8f39); width:0; }
+    .note { margin-top:18px; font-size:14px; color:#78695d; }
     @media (max-width:720px){ .stats { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
@@ -30,9 +31,10 @@
         <div class="card"><div class="muted">访问量</div><div class="n" id="visits">0</div></div>
         <div class="card"><div class="muted">完成量</div><div class="n" id="completions">0</div></div>
         <div class="card"><div class="muted">完成率</div><div class="n" id="rate">0%</div></div>
-        <div class="card"><div class="muted">待确认并列</div><div class="n" id="unresolved">0</div></div>
+        <div class="card"><div class="muted">并列待确认</div><div class="n" id="unresolved">0</div></div>
       </div>
       <div class="bars" id="bars"></div>
+      <div class="note">此页仅统计主倾向分布与并列待确认数量，不展示“负倾向”与前端已移除的累计得分字段。</div>
     </div>
   </div>
   <script>
