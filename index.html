@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>探索你的攀岩灵魂｜你是岩馆里的哪种动物</title>
+  <meta name="description" content="20题攀岩动物原型测试，基于动作偏好与行为取向，输出你的主倾向。" />
+  <link rel="icon" type="image/png" sizes="128x128" href="./assets/favicon.png" />
+  <link rel="apple-touch-icon" sizes="128x128" href="./assets/apple-touch-icon.png" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --line: #ece7df;
+      --line-strong: #ded5c7;
+      --text: #1f1a17;
+      --muted: #76695e;
+      --accent: #c95a1d;
+      --accent-soft: #f6a259;
+      --shadow: 0 10px 30px rgba(80, 52, 22, 0.06);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+    @font-face {
+      font-family: "YeZiGuaiJiaoHei";
+      src: url(./assets/fonts/YeZiGuaiJiaoHei.ttf) format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "YeZiTangYingHei";
+      src: url(./assets/fonts/YeZiTangYingHei.ttf) format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    body { font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif; line-height: 1.6; }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 34px 18px 64px; }
+    #introView { max-width: 560px; margin: 0 auto; min-height: calc(100vh - 120px); display: flex; flex-direction: column; justify-content: center; align-items: center; border: none; box-shadow: none; padding-left: 18px; padding-right: 18px; }
+    .hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 999px; background: linear-gradient(90deg, #fff1e6 0%, #ffe0c2 100%); color: #d9732b; border: 1px solid #f4c69c; font-size: 14px; font-weight: 800; line-height: 1; margin-bottom: 22px; box-shadow: 0 6px 16px rgba(217,115,43,.08); }
+    .hero-pill::before { content: '•'; font-size: 18px; line-height: 1; }
+    .hero, .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .hero { text-align: center; padding: 52px 28px 42px; }
+    .hero h1 { margin: 0; font-size: clamp(30px, 5.2vw, 50px); line-height: 1.14; font-weight: 900; letter-spacing: -0.035em; }
+    .hero .line2 { display: block; margin-top: 10px; background: linear-gradient(90deg, #b84912 0%, #e87d2b 50%, #f6b067 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-note { margin: 16px auto 0; max-width: 520px; color: #9a9086; font-size: 15px; line-height: 1.7; font-weight: 500; }
+    .cta { margin-top: 26px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    button { appearance: none; border: none; font: inherit; cursor: pointer; transition: transform .18s ease, background .18s ease, border-color .18s ease, opacity .18s ease, box-shadow .18s ease; }
+    button:hover { transform: translateY(-1px); }
+    button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .btn-primary, .btn-secondary { border-radius: 999px; padding: 16px 22px; font-weight: 800; }
+    .btn-primary { background: linear-gradient(90deg, #df7a5a 0%, #f1a48f 100%); color: #fff; box-shadow: 0 10px 24px rgba(223,122,90,.22); }
+    .btn-secondary { background: #fff; color: var(--text); border: 1px solid var(--line-strong); }
+    .panel { margin-top: 18px; padding: 26px 22px; }
+    .hidden { display: none !important; }
+    .quiz-progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .quiz-back { width: 34px; height: 34px; min-width: 34px; display: inline-grid; place-items: center; border-radius: 999px; border: 1px solid transparent; background: transparent; color: #7a7f8f; font-size: 24px; line-height: 1; padding: 0; box-shadow: none; }
+    .quiz-back:hover { background: #faf7f3; border-color: var(--line); color: #5f6573; }
+    .quiz-back:disabled { opacity: .34; cursor: not-allowed; transform: none; }
+    .quiz-progress-main { flex: 1; display: flex; align-items: center; gap: 12px; }
+    .progress-track { flex: 1; height: 6px; background: #e4e1db; border-radius: 999px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, #e07a2f 0%, #f2a24e 100%); transition: width .28s ease; border-radius: inherit; }
+    .progress-count { min-width: 42px; text-align: right; color: #6d7486; font-size: 15px; font-weight: 700; letter-spacing: .01em; }
+    .question-shell { margin-top: 10px; position: relative; min-height: 356px; }
+    .question-card { border: 1px solid var(--line); border-radius: 22px; padding: 28px 22px 22px; background: #fff; transform: translateX(0); opacity: 1; transition: transform .32s cubic-bezier(.22,.61,.36,1), opacity .32s cubic-bezier(.22,.61,.36,1); }
+    .question-card.leaving { opacity: 0; transform: translateX(-22px) scale(.985); }
+    .question-card.entering { opacity: 0; transform: translateX(22px) scale(.985); }
+    .question-card.entering.enter-active { opacity: 1; transform: translateX(0) scale(1); }
+    .question-title { margin: 0 0 16px; font-family: "Source Han Sans CN", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif; font-size: clamp(20px, 4.6vw, 32px); line-height: 1.22; letter-spacing: 0; font-weight: 700; }
+    .options { display: grid; gap: 12px; }
+    .option { width: 100%; text-align: left; padding: 14px 16px; border-radius: 18px; border: 1px solid var(--line); background: #fff; display: flex; gap: 14px; align-items: center; color: var(--text); min-height: 72px; }
+    .option:hover { border-color: #e8c7ab; box-shadow: 0 8px 20px rgba(201,90,29,.08); }
+    .option.active { border-color: #e29652; background: #fff8f3; }
+    .option-tag { width: 36px; min-width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #fff7f0; color: var(--accent); border: 1px solid #f2d3bb; font-weight: 700; font-family: "Source Han Sans CN", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif; }
+    .option-text { font-family: "Source Han Sans CN", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif; font-size: 15px; line-height: 1.38; font-weight: 700; display: flex; align-items: center; min-height: 36px; }
+    .nav-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; }
+    @media (max-width: 640px) {
+      .question-title { font-size: 18px; line-height: 1.24; }
+      .option { min-height: 64px; }
+      .option-text { font-size: 14px; }
+    }
+
+    .result-stage { max-width: 520px; margin: 0 auto; }
+    .result-header { text-align: center; margin-bottom: 18px; }
+    .result-title { margin: 0; font-size: clamp(32px, 6vw, 46px); line-height: 1.08; letter-spacing: -0.04em; font-weight: 900; color: #282b35; }
+    .result-sub { margin: 10px auto 0; color: #7f7368; font-size: 14px; max-width: 420px; }
+    .animal-card { border: 1px solid #ddd6ca; border-radius: 28px; overflow: hidden; background: #fff; box-shadow: 0 14px 30px rgba(36, 24, 17, .08); }
+    .animal-hero { position: relative; min-height: 292px; height: 292px; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .hero-orb { position: absolute; border-radius: 999px; opacity: .34; }
+    .hero-orb.small { width: 28px; height: 28px; left: 30px; top: 96px; }
+    .hero-orb.large { width: 86px; height: 86px; right: 30px; top: 22px; }
+    .hero-orb.low { width: 54px; height: 54px; left: 26px; bottom: 42px; }
+    #primaryVisual { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 2; }
+    #primaryVisual img {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: var(--img-max-w, 92%);
+      max-height: var(--img-max-h, 86%);
+      object-fit: contain;
+      object-position: center center;
+      filter: drop-shadow(0 12px 18px rgba(20,22,28,.12));
+      background: transparent !important;
+      transform: translate(var(--img-shift-x, 0), var(--img-shift-y, 0));
+    }
+    #primaryVisual img.fit-standard { --img-max-w: 92%; --img-max-h: 86%; }
+    #primaryVisual img.fit-unified { --img-max-w: 92%; --img-max-h: 86%; }
+    #primaryVisual img.fit-gibbon { --img-max-w: 92%; --img-max-h: 86%; }
+    #primaryVisual img.fit-snow { --img-max-w: 92%; --img-max-h: 86%; }
+    #primaryVisual img.fit-lynx { --img-max-w: 92%; --img-max-h: 86%; }
+    #primaryVisual img.fit-bear { --img-max-w: 92%; --img-max-h: 86%; }
+    #primaryVisual img.fit-ibex { --img-max-w: 92%; --img-max-h: 86%; }
+    #primaryVisual img.fit-marmot { --img-max-w: 92%; --img-max-h: 86%; }
+
+    .animal-body { padding: 22px 28px 24px; text-align: center; background:#fff; }
+    .animal-name { margin: 0; font-size: clamp(34px, 7vw, 56px); line-height: 1.04; letter-spacing: -0.05em; font-weight: 900; color: #364969; }
+    .animal-role { margin: 8px 0 0; font-size: 14px; color: #60728a; font-weight: 800; }
+    .tag-row { margin-top: 14px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .tag-pill { padding: 8px 14px; border-radius: 999px; background: #f7eee9; color: #dd7b5a; font-size: 13px; font-weight: 800; }
+    .animal-desc { margin: 18px 0 0; font-size: 15px; color: #405268; line-height: 1.92; text-align: justify; text-justify: inter-ideograph; }
+    .animal-desc strong { font-weight: 900; color: #2f3f5a; }
+    .result-actions { display: grid; gap: 12px; margin-top: 18px; }
+    .result-actions .btn-primary, .result-actions .btn-secondary { width: 100%; padding-top: 18px; padding-bottom: 18px; font-size: 16px; }
+    .result-stage.result-enter { animation: resultStageFade .58s cubic-bezier(.22,.61,.36,1) both; }
+    #primaryVisual.visual-enter { animation: resultVisualFade .72s cubic-bezier(.22,.61,.36,1) .16s both; }
+    @keyframes resultStageFade {
+      from { opacity: 0; transform: translateY(22px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes resultVisualFade {
+      from { opacity: 0; transform: translateY(18px) scale(.94); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 720px) {
+      .wrap { padding: 22px 14px 42px; }
+      .hero { padding: 42px 20px 34px; }
+      #introView { min-height: calc(100vh - 80px); }
+      .panel { padding: 20px 16px; }
+      .question-card { padding: 22px 16px 18px; }
+      .option-text { font-size: 15px; }
+      .animal-hero { height: 292px; padding: 18px; }
+      .animal-body { padding: 18px 18px 22px; }
+      .animal-desc { font-size: 14px; }
+    }
+
+    /* 开始页渐显 */
+    #introView {
+      opacity: 0;
+      animation: introScreenFade .55s ease-out forwards;
+    }
+    #introView .hero-pill {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: introFadeUp .6s ease-out .08s forwards;
+    }
+    #introView h1 {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: introFadeUp .75s ease-out .16s forwards;
+    }
+    #introView .hero-note {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: introFadeUp .75s ease-out .24s forwards;
+    }
+    #introView .cta {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: introFadeUp .75s ease-out .32s forwards;
+    }
+    @keyframes introScreenFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes introFadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero" id="introView">
+      <div class="hero-pill">10道题 · 2分钟</div>
+      <h1>
+        <span>探索你的攀岩灵魂</span>
+        <span class="line2">你是岩馆里的哪种动物</span>
+      </h1>
+      <p class="hero-note">本测试纯属娱乐、大家都是独一无二的快乐Monkey</p>
+      <div class="cta">
+        <button class="btn-primary" id="startBtn">开始测试</button>
+      </div>
+    </section>
+
+    <section class="panel hidden" id="quizView">
+      <div class="quiz-progress-row">
+        <button class="quiz-back" id="prevBtn" aria-label="返回上一题">‹</button>
+        <div class="quiz-progress-main">
+          <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+          <div class="progress-count" id="progressCount">1/10</div>
+        </div>
+      </div>
+      <div class="question-shell" id="questionShell"></div>
+    </section>
+
+    <section class="hidden" id="resultView">
+      <div class="result-stage" id="resultStage">
+        <div class="result-header">
+          <h2 class="result-title" id="resultTitle"></h2>
+          <p class="result-sub" id="resultSummary"></p>
+        </div>
+
+        <article class="animal-card" id="primaryCard">
+          <div class="animal-hero" id="primaryHero">
+            <span class="hero-orb small" id="orbSmall"></span>
+            <span class="hero-orb large" id="orbLarge"></span>
+            <span class="hero-orb low" id="orbLow"></span>
+            <div id="primaryVisual"></div>
+          </div>
+          <div class="animal-body">
+            <h3 class="animal-name" id="primaryName"></h3>
+            <div class="animal-role" id="primaryMeta"></div>
+            <div class="tag-row" id="primaryTags"></div>
+            <div class="animal-desc" id="primaryDesc"></div>
+          </div>
+        </article>
+
+        <div class="result-actions">
+          <button class="btn-primary" id="saveBtn">保存图片立即分享</button>
+          <button class="btn-secondary" id="retestBtn">再测一次</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    const CONFIG = {
+      analyticsEndpoint: "https://script.google.com/macros/s/AKfycbziDSM4ebxR2YQ0Hrj161XdAOCJ7TYbwZTFBKPZp1Mbu7j5nlKWYtL7bzeYh2Iz1J9t/exec",
+      siteName: "climbing-animal-quiz",
+      visitCooldownHours: 12
+    };
+
+    const ANIMALS = {"长臂猿":{"key":"长臂猿","subtitle":"静态省力派","meta":"静态省力派","tags":["# 一把够到","# 能省就省","# 长手有理"],"descHtml":"你到一条线路前，别人还在碎碎念“这个点是不是得蹬一下、摆一下、再冲一下”，你已经默默抬手——够到了。你的攀爬哲学很简单：既然能静态拿，为什么要瞎折腾？动作干净，出手克制，主打一个“少动一步是一步”。朋友看你爬线，经常会发出灵魂疑问：<strong>“这也能直接拿到？”</strong> 而你只会淡淡回头，像什么都没发生过。","palette":{"bg":"#ece7d2","orb":"#dcca83"},"fit":"fit-unified","image":"./assets/images/gibbon.png"},"雪豹":{"key":"雪豹","subtitle":"腾空冲板王","meta":"腾空冲板王","tags":["# 敢飞敢抓","# 爆发上线","# 不跳不爽"],"descHtml":"你不是在爬线，你是在和地心引力狠狠干架。看到远点子，你第一反应不是“这能不能做”，而是“我飞过去试试”。你身上自带一种很危险但很迷人的气质：站在起跳点的时候，大家都知道你要整活了。成了，全场欢呼；没成，你拍拍镁粉继续来，像什么都没丢，最多丢一点面子——但你不在乎。毕竟你的信条一直都是：<strong>先飞再说。</strong>","palette":{"bg":"#e8f2ef","orb":"#a7ddd0"},"fit":"fit-unified","image":"./assets/images/snowleopard.png"},"高山灵猫":{"key":"高山灵猫","subtitle":"体位操作怪","meta":"体位操作怪","tags":["# 高脚预备","# 转髋丝滑","# 角度拿捏"],"descHtml":"别人爬难点靠蛮力，你爬难点靠“拧一拧、转一转、塞一塞”。你总能把身体摆进一些让围观群众看了脖子发酸的位置：脚踩到快到肩膀，胯转到像要打结，整个人像液体一样流进线路里。队友在下面看你，嘴里常常只剩一句：<strong>“这动作也能做出来？”</strong> 而你已经在上面轻描淡写地调整下一步了。你不只是会爬，你是会“摆”。","palette":{"bg":"#f5eadf","orb":"#efcaa9"},"fit":"fit-unified","image":"./assets/images/civet.png"},"灰熊":{"key":"灰熊","subtitle":"锁定硬拉怪","meta":"锁定硬拉怪","tags":["# 手臂有货","# 锁住不掉","# 硬拉上墙"],"descHtml":"有些人爬岩靠技巧，有些人靠柔韧，而你——靠一身压迫感。你挂在点上时，别人觉得那是小边小扣，你觉得那是“够用了”。锁臂、拉起、再狠狠干一下，动作可能不花哨，但非常有说服力。你爬线时总给人一种感觉：这条线不是被你解开的，是被你<strong>拽服的</strong>。队友看你爆拉上去时，嘴上说“太猛了”，心里想的是：<strong>“这人上墙怎么像来讨债的。”</strong>","palette":{"bg":"#efe6dd","orb":"#e2cab9"},"fit":"fit-unified","image":"./assets/images/bear.png"},"岩羊":{"key":"岩羊","subtitle":"平衡控点师","meta":"平衡控点师","tags":["# 脚点洁癖","# 重心稳住","# 不晃就是赢"],"descHtml":"你是那种站在一粒米大小脚点上，依然能看起来很从容的人。别人一踩小点就开始抖腿、摇摆、怀疑人生，你却像自带陀螺仪，脚一放、重心一收，整个人立刻稳得像焊在墙上。你很少有大开大合的表演，更像是在用一种安静但吓人的方式告诉大家：<strong>平衡感也是硬实力。</strong> 别人爬的是线路，你爬的是“控制感”。","palette":{"bg":"#efeeea","orb":"#d9d6cf"},"fit":"fit-unified","image":"./assets/images/goat.png"},"高山土拨鼠":{"key":"高山土拨鼠","subtitle":"气氛组组长","meta":"气氛组组长","tags":["# 团爬发起人","# 鼓掌比谁都快","# 岩馆交际花"],"descHtml":"你来岩馆不只是为了爬，更是为了把整个场子盘活。你可以自己爬，但你更擅长拉着大家一起爬；你可以尝试难点，但你更擅长在别人掉下来时第一时间送上“没事这把很近了”。哪怕你自己没在墙上，存在感也一点不低：递粉袋、喊加油、围观分析、组织复盘，主打一个全流程参与。你可能不是最安静的那个，但通常是最能让人想继续留下来玩的那个。毕竟有你在，岩馆像岩馆，<strong>没你在，岩馆像自习室。</strong>","palette":{"bg":"#efe6dd","orb":"#e2cab9"},"fit":"fit-unified","image":"./assets/images/marmot.png"}};
+
+    const ORDER = Object.keys(ANIMALS);
+    const QUESTIONS = [{"id": "Q1", "title": "岩馆刚开一条新线，你通常会先：", "options": [{"key": "A", "text": "从下往上扫一遍，先把整体节奏串起来"}, {"key": "B", "text": "盯住最别扭的那个位置，想它怎么才能做顺"}, {"key": "C", "text": "看哪一步其实有机会少做一点"}, {"key": "D", "text": "先看看有没有人已经去摸了"}]}, {"id": "Q2", "title": "朋友下来后说“就差一点”，你更像会接：", "options": [{"key": "A", "text": "你刚才那下先别急，稳一下再说"}, {"key": "B", "text": "是不是其实还能走得更直接"}, {"key": "C", "text": "要不要试试把身体再转进去一点"}, {"key": "D", "text": "再来一把，这次感觉已经到了"}]}, {"id": "Q3", "title": "团爬同一条 project 时，你最常自然进入：", "options": [{"key": "A", "text": "把大家节奏带起来、加油也接得很快"}, {"key": "B", "text": "谁都还没想明白前，先去碰最难那下"}, {"key": "C", "text": "盯着看半天，总觉得还能少做一步"}, {"key": "D", "text": "别人聊发力时，你在想有没有别的身体路线"}]}, {"id": "Q4", "title": "休息区刚坐下，你脑子里最容易停在：", "options": [{"key": "A", "text": "刚才那下差的可能不是力，是时机"}, {"key": "B", "text": "如果站得再安稳一点，后面会轻松很多"}, {"key": "C", "text": "其实中间那两步好像能合成一步"}, {"key": "D", "text": "先看看刚刚那把有没有人拍到"}]}, {"id": "Q5", "title": "看别人示范一遍后，你最容易记住：", "options": [{"key": "A", "text": "他哪一下像是“到了就出去”"}, {"key": "B", "text": "他在哪个位置突然变得很轻松"}, {"key": "C", "text": "他身体一转，整条线就顺了"}, {"key": "D", "text": "他脚下几乎没有多余晃动"}]}, {"id": "Q6", "title": "第一次摸一条陡线时，你最容易先出现的感觉是：", "options": [{"key": "A", "text": "先别急，我得先把自己挂稳"}, {"key": "B", "text": "这条只要敢一点，应该就有"}, {"key": "C", "text": "好像有个位置能让我把人塞进去"}, {"key": "D", "text": "如果顺序对了，应该不用做这么多"}]}, {"id": "Q7", "title": "哪种线最容易让你想一直再来一把：", "options": [{"key": "A", "text": "看着总差一点点就会舒服很多的"}, {"key": "B", "text": "做起来一旦连上就很上头的"}, {"key": "C", "text": "每次试都能发现新身体路线的"}, {"key": "D", "text": "站上去就会特别想把它控制住的"}]}, {"id": "Q8", "title": "刷到别人发的完攀视频，你最容易暂停在：", "options": [{"key": "A", "text": "大家一起喊出来的那个瞬间"}, {"key": "B", "text": "看着不太可能，但他就是拿到的那一下"}, {"key": "C", "text": "身体角度一对上，整个人突然顺起来的时候"}, {"key": "D", "text": "手已经抓住，但还得把自己稳下来的那一刻"}]}, {"id": "Q9", "title": "你完成一条卡很久的线下来后，第一反应更像：", "options": [{"key": "A", "text": "原来那个位置真能这么处理"}, {"key": "B", "text": "刚才再不出去，今天又得留作业了"}, {"key": "C", "text": "其实中间那步终于不用多做了"}, {"key": "D", "text": "快，看看刚那把谁录到了"}]}, {"id": "Q10", "title": "如果今天最后只再玩一条，你更想选：", "options": [{"key": "A", "text": "做完会让人觉得“原来还能这么省”的"}, {"key": "B", "text": "站上去就不太敢分心的"}, {"key": "C", "text": "到关键位置必须狠狠干一下的"}, {"key": "D", "text": "做完以后全场都想鼓掌的"}]}];
+
+    const SCORE_MAP = {"Q1": {"A": {"雪豹": 0.45, "长臂猿": 0.35, "高山灵猫": 0.15}, "B": {"高山灵猫": 0.7, "岩羊": 0.2, "长臂猿": 0.1}, "C": {"长臂猿": 0.7, "岩羊": 0.2, "灰熊": 0.1}, "D": {"高山土拨鼠": 0.8, "雪豹": 0.1, "高山灵猫": 0.1}}, "Q2": {"A": {"灰熊": 0.45, "岩羊": 0.35, "长臂猿": 0.1}, "B": {"长臂猿": 0.6, "雪豹": 0.2, "高山灵猫": 0.15}, "C": {"高山灵猫": 0.7, "岩羊": 0.15, "长臂猿": 0.1}, "D": {"雪豹": 0.6, "高山土拨鼠": 0.2, "灰熊": 0.1}}, "Q3": {"A": {"高山土拨鼠": 0.75, "雪豹": 0.1, "岩羊": 0.1}, "B": {"灰熊": 0.45, "雪豹": 0.35, "高山土拨鼠": 0.05}, "C": {"长臂猿": 0.65, "高山灵猫": 0.2, "岩羊": 0.1}, "D": {"高山灵猫": 0.65, "岩羊": 0.2, "长臂猿": 0.1}}, "Q4": {"A": {"雪豹": 0.45, "灰熊": 0.2, "高山灵猫": 0.15}, "B": {"岩羊": 0.65, "灰熊": 0.2, "长臂猿": 0.1}, "C": {"长臂猿": 0.65, "高山灵猫": 0.2, "岩羊": 0.1}, "D": {"高山土拨鼠": 0.75, "雪豹": 0.1}}, "Q5": {"A": {"雪豹": 0.55, "灰熊": 0.15, "长臂猿": 0.1}, "B": {"长臂猿": 0.45, "高山灵猫": 0.25, "岩羊": 0.1}, "C": {"高山灵猫": 0.75, "长臂猿": 0.1, "岩羊": 0.1}, "D": {"岩羊": 0.65, "灰熊": 0.2, "长臂猿": 0.05}}, "Q6": {"A": {"灰熊": 0.65, "岩羊": 0.2, "长臂猿": 0.05}, "B": {"雪豹": 0.65, "灰熊": 0.15, "高山土拨鼠": 0.05}, "C": {"高山灵猫": 0.7, "长臂猿": 0.15, "岩羊": 0.1}, "D": {"长臂猿": 0.65, "高山灵猫": 0.2, "岩羊": 0.05}}, "Q7": {"A": {"长臂猿": 0.55, "雪豹": 0.2, "岩羊": 0.1}, "B": {"雪豹": 0.5, "高山灵猫": 0.2, "灰熊": 0.1}, "C": {"高山灵猫": 0.7, "长臂猿": 0.1, "岩羊": 0.1}, "D": {"岩羊": 0.55, "灰熊": 0.25, "长臂猿": 0.05}}, "Q8": {"A": {"高山土拨鼠": 0.65, "雪豹": 0.2}, "B": {"长臂猿": 0.55, "雪豹": 0.2, "灰熊": 0.05}, "C": {"高山灵猫": 0.7, "岩羊": 0.1, "长臂猿": 0.05}, "D": {"灰熊": 0.6, "岩羊": 0.25}}, "Q9": {"A": {"高山灵猫": 0.5, "长臂猿": 0.2, "岩羊": 0.1}, "B": {"雪豹": 0.6, "灰熊": 0.15, "高山土拨鼠": 0.05}, "C": {"长臂猿": 0.65, "高山灵猫": 0.15, "岩羊": 0.1}, "D": {"高山土拨鼠": 0.8, "雪豹": 0.1}}, "Q10": {"A": {"长臂猿": 0.65, "高山灵猫": 0.15, "岩羊": 0.1}, "B": {"岩羊": 0.5, "灰熊": 0.25, "高山灵猫": 0.05}, "C": {"灰熊": 0.6, "雪豹": 0.2, "岩羊": 0.05}, "D": {"高山土拨鼠": 0.55, "雪豹": 0.25, "灰熊": 0.05}}};
+
+    const state = {
+      index: 0,
+      answers: Array(QUESTIONS.length).fill(null),
+      result: null,
+      transitioning: false,
+      sessionId: null
+    };
+
+    const introView = document.getElementById('introView');
+    const quizView = document.getElementById('quizView');
+    const resultView = document.getElementById('resultView');
+    const questionShell = document.getElementById('questionShell');
+    const progressBar = document.getElementById('progressBar');
+    const progressCountEl = document.getElementById('progressCount');
+    const prevBtn = document.getElementById('prevBtn');
+    const resultStageEl = document.getElementById('resultStage');
+    const primaryVisualEl = document.getElementById('primaryVisual');
+
+    document.getElementById('startBtn').addEventListener('click', startQuiz);
+    prevBtn.addEventListener('click', prevQuestion);
+    document.getElementById('retestBtn').addEventListener('click', resetQuiz);
+    document.getElementById('saveBtn').addEventListener('click', saveResultImage);
+
+    function esc(str) {
+      return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+    }
+
+    init();
+
+    function init() {
+      state.sessionId = getSessionId();
+      logVisitOnce();
+    }
+
+    function startQuiz() {
+      introView.classList.add('hidden');
+      resultView.classList.add('hidden');
+      quizView.classList.remove('hidden');
+      renderQuestion(true);
+    }
+
+    function resetQuiz() {
+      state.index = 0;
+      state.answers = Array(QUESTIONS.length).fill(null);
+      state.result = null;
+      state.transitioning = false;
+      resultView.classList.add('hidden');
+      quizView.classList.add('hidden');
+      resultStageEl.classList.remove('result-enter');
+      primaryVisualEl.classList.remove('visual-enter');
+      introView.classList.remove('hidden');
+    }
+
+    function prevQuestion() {
+      if (state.transitioning || state.index === 0) return;
+      state.index -= 1;
+      renderQuestion();
+    }
+
+    function renderQuestion(firstPaint = false) {
+      const q = QUESTIONS[state.index];
+      progressBar.style.width = `${((state.index + 1) / QUESTIONS.length) * 100}%`;
+      if (progressCountEl) progressCountEl.textContent = `${state.index + 1}/${QUESTIONS.length}`;
+
+      const selected = state.answers[state.index];
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      if (!firstPaint) card.classList.add('entering');
+      card.innerHTML = `
+        <h2 class="question-title">${q.id}. ${q.title}</h2>
+        <div class="options">
+          ${q.options.map(opt => `
+            <button class="option ${selected === opt.key ? 'active' : ''}" data-key="${opt.key}">
+              <span class="option-tag">${opt.key}</span>
+              <span class="option-text">${opt.text}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+      card.querySelectorAll('.option').forEach(btn => {
+        btn.addEventListener('click', () => selectOption(btn.dataset.key));
+      });
+
+      questionShell.innerHTML = '';
+      questionShell.appendChild(card);
+      prevBtn.disabled = state.index === 0;
+
+      if (!firstPaint) {
+        requestAnimationFrame(() => {
+          card.classList.add('enter-active');
+        });
+      }
+    }
+
+    function selectOption(key) {
+      if (state.transitioning) return;
+      state.answers[state.index] = key;
+      const currentCard = questionShell.querySelector('.question-card');
+      if (!currentCard) return;
+      currentCard.querySelectorAll('.option').forEach(el => el.disabled = true);
+      const active = currentCard.querySelector(`[data-key="${key}"]`);
+      if (active) active.classList.add('active');
+
+      if (state.index === QUESTIONS.length - 1) {
+        state.transitioning = true;
+        currentCard.classList.add('leaving');
+        setTimeout(() => {
+          finishQuiz();
+          state.transitioning = false;
+        }, 240);
+        return;
+      }
+
+      state.transitioning = true;
+      currentCard.classList.add('leaving');
+      setTimeout(() => {
+        state.index += 1;
+        renderQuestion();
+        state.transitioning = false;
+      }, 240);
+    }
+
+    function evaluate() {
+      const animalOrder = (typeof ORDER !== "undefined" && ORDER && ORDER.length) ? ORDER : Object.keys(ANIMALS);
+      const scores = Object.fromEntries(animalOrder.map(name => [name, 0]));
+      QUESTIONS.forEach((q, i) => {
+        const ans = state.answers[i];
+        if (!ans) return;
+        const weighted = SCORE_MAP[q.id] && SCORE_MAP[q.id][ans];
+        if (!weighted) return;
+        Object.entries(weighted).forEach(([animal, value]) => {
+          scores[animal] = Number((scores[animal] + value).toFixed(2));
+        });
+      });
+
+      const maxScore = Math.max(...Object.values(scores));
+      const primaryCandidates = animalOrder.filter(name => Math.abs(scores[name] - maxScore) < 1e-9);
+      const tieState = primaryCandidates.length > 1 ? 'needs_confirmation' : 'resolved';
+      const primaryType = tieState === 'resolved' ? primaryCandidates[0] : primaryCandidates.join(' / ');
+      return { primaryType, primaryCandidates, tieState, scores };
+    }
+
+    function finishQuiz() {
+      const result = evaluate();
+      state.result = result;
+      quizView.classList.add('hidden');
+      resultView.classList.remove('hidden');
+      resultStageEl.classList.remove('result-enter');
+      primaryVisualEl.classList.remove('visual-enter');
+      renderResult(result);
+      requestAnimationFrame(() => {
+        resultStageEl.classList.add('result-enter');
+        primaryVisualEl.classList.add('visual-enter');
+      });
+      logEvent('result', {
+        sessionId: state.sessionId,
+        siteName: CONFIG.siteName,
+        timestamp: new Date().toISOString(),
+        referrer: document.referrer || 'direct',
+        screen: `${window.screen.width}x${window.screen.height}`,
+        userAgent: navigator.userAgent,
+        path: location.pathname,
+        answers: QUESTIONS.map((q, i) => ({ questionId: q.id, answer: state.answers[i] })),
+        result: {
+          primaryType: result.primaryType,
+          tieState: result.tieState,
+          primaryCandidates: result.primaryCandidates,
+          rawTypeScores: result.scores
+        },
+        rawScores: result.scores
+      });
+    }
+
+    function renderResult(result) {
+      const unresolved = result.tieState === 'needs_confirmation';
+      const primaryAnchor = unresolved ? result.primaryCandidates[0] : result.primaryType;
+      const primaryDisplay = ANIMALS[primaryAnchor];
+
+      document.getElementById('resultTitle').textContent = unresolved
+        ? `你的结果介于 ${result.primaryCandidates.join(' 与 ')} 之间`
+        : `你的主倾向是 ${result.primaryType}`;
+      document.getElementById('resultSummary').textContent = unresolved
+        ? '最高分出现并列，下面的卡片先展示第一候选画像。'
+        : '';
+
+      applyPrimaryCard(primaryAnchor);
+      document.getElementById('primaryName').textContent = unresolved ? result.primaryCandidates.join(' / ') : primaryDisplay.key;
+      document.getElementById('primaryMeta').textContent = unresolved
+        ? result.primaryCandidates.map(name => ANIMALS[name].meta).join(' / ')
+        : primaryDisplay.meta;
+      document.getElementById('primaryDesc').innerHTML = unresolved
+        ? result.primaryCandidates.map(name => `<strong>${name}</strong>：${ANIMALS[name].descHtml}`).join(' ')
+        : primaryDisplay.descHtml;
+    }
+
+    function applyPrimaryCard(name) {
+      const animal = ANIMALS[name];
+      document.getElementById('primaryHero').style.background = animal.palette.bg;
+      document.getElementById('orbSmall').style.background = animal.palette.orb;
+      document.getElementById('orbLarge').style.background = animal.palette.orb;
+      document.getElementById('orbLow').style.background = animal.palette.orb;
+      document.getElementById('primaryVisual').innerHTML = `<img alt="${animal.key}" class="${animal.fit}" src="${animal.image}">`;
+      document.getElementById('primaryTags').innerHTML = animal.tags.map(tag => `<span class="tag-pill">${esc(tag)}</span>`).join('');
+    }
+
+    async function saveResultImage() {
+      const stage = document.getElementById('resultStage');
+      const btn = document.getElementById('saveBtn');
+      const old = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '正在生成图片...';
+      try {
+        if (window.html2canvas) {
+          const canvas = await html2canvas(stage, {
+            backgroundColor: '#ffffff',
+            scale: Math.min(2, window.devicePixelRatio || 1.5),
+            useCORS: true
+          });
+          const link = document.createElement('a');
+          link.download = 'climbing-animal-result.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        } else {
+          alert('当前环境未加载截图组件，请直接截屏保存。');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('生成失败，请直接截屏保存。');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = old;
+      }
+    }
+
+    function getSessionId() {
+      const key = 'climb_animal_quiz_session_id';
+      const existing = localStorage.getItem(key);
+      if (existing) return existing;
+      const id = `sess_${Math.random().toString(36).slice(2)}_${Date.now()}`;
+      localStorage.setItem(key, id);
+      return id;
+    }
+
+    function logVisitOnce() {
+      const key = 'climb_animal_quiz_last_visit_log';
+      const last = Number(localStorage.getItem(key) || 0);
+      const now = Date.now();
+      const cooldown = CONFIG.visitCooldownHours * 60 * 60 * 1000;
+      if (now - last < cooldown) return;
+      localStorage.setItem(key, String(now));
+      logEvent('visit', {
+        sessionId: state.sessionId,
+        siteName: CONFIG.siteName,
+        timestamp: new Date().toISOString(),
+        pageUrl: location.href,
+        path: location.pathname,
+        referrer: document.referrer || 'direct',
+        screen: `${window.screen.width}x${window.screen.height}`,
+        language: navigator.language,
+        userAgent: navigator.userAgent
+      });
+    }
+
+    function logEvent(eventType, payload) {
+      if (!CONFIG.analyticsEndpoint) return;
+      const body = JSON.stringify({ eventType, ...payload });
+      const blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(CONFIG.analyticsEndpoint, blob);
+        return;
+      }
+      fetch(CONFIG.analyticsEndpoint, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body
+      }).catch(() => null);
+    }
+  </script>
+</body>
+</html>
